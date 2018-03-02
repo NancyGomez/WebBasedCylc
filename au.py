@@ -1,10 +1,11 @@
 #au.py
 #needs incorporated with new app.py
 import requests
+import json
 from os.path import expanduser
 
 hostName = 'nancy-VirtualBox'
-portNumber = 43079
+portNumber = 43086
 home = expanduser("~")
 #typical non-example suite path
 #passphraseFile = home+"/cylc-run/"+suiteName+"/.service/passphrase
@@ -30,6 +31,4 @@ ret = session.get(
                 )
 
 print ret.status_code
-print ret.json()
-print ret.text
-
+print json.dumps(ret.json(), indent=4, sort_keys=True)
