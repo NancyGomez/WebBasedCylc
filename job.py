@@ -1,3 +1,10 @@
+'''
+    FILE: job.py
+    PURPOSE: create a class to define a job's attributes
+    PRECONDITIONS: A default constructor is provided but requires the dictionary response from
+'''
+
+
 class Job:
     def __init__(self):
         self.name = ""
@@ -14,14 +21,27 @@ class Job:
     def __init__(self, job_dict):
         self.name = job_dict["name"]
         self.state = job_dict["state"]
-        self.host = job_dict["job_hosts"]
+
+        # host may or may not exist!
+        self.host = "N/A"
+        if ("host" in job_dict):
+            self.host = job_dict["host"]
+
         self.job_system = job_dict["batch_sys_name"]
+
+        # TODO: ask Tim if this should be submit_method_id instead
         self.job_ID = job_dict["label"]
+
+        # TODO: ask Tim if we should use the stirng or non stirng version
         self.T_submit = job_dict["submitted_time_string"]
-        self.T_start = job_dict["started_time_string"] # also submitted_time_string ??
+        self.T_start = job_dict["started_time_string"]
         self.T_finish = job_dict["finished_time_string"]
+
         self.dT_mean = job_dict["mean_elapsed_time"]
         self.latest_message = job_dict["latest_message"]
 
     def printJob(self):
-        print '''Name: %s\nState: %s''' % (self.name, self.state)
+        f = ("Name: {}\nState: {}\nHost: {}\nJob System: {}\nJob ID: {}\nLatest Message: {}"
+             "\n-- Times --\nSubmitted: {}\nStarted: {}\nFinished: {}\ndT_mean: {}\n")
+        print f.format(self.name, self.state, self.host, self.job_system, self.job_ID, self.latest_message,
+                        self.T_submit, self.T_start, self.T_finish, self.dT_mean)

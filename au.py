@@ -14,7 +14,7 @@ from os.path import expanduser
 # TODO: change to your host
 hostName = 'nancy-VirtualBox'
 # TODO: make sure your port is correct (changes every time you run a suite)
-portNumber = 43019
+portNumber = 43082
 # TODO: make sure you change this to your path to your passphrase
 passphraseFile = "/home/nancy/cylc-run/my.suite/.service/passphrase"
 
