@@ -49,7 +49,7 @@ ret = session.get(
                     url,
                     auth=auth,
                     verify=_get_verify()
-                )
+                 )
 
 response = ret.json()
 jobs = parseJobs(response)

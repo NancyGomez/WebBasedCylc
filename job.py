@@ -29,10 +29,9 @@ class Job:
 
         self.job_system = job_dict["batch_sys_name"]
 
-        # TODO: ask Tim if this should be submit_method_id instead
-        self.job_ID = job_dict["label"]
+        # TODO: double check with code
+        self.job_ID = job_dict["submit_method_id"]
 
-        # TODO: ask Tim if we should use the stirng or non stirng version
         self.T_submit = job_dict["submitted_time_string"]
         self.T_start = job_dict["started_time_string"]
         self.T_finish = job_dict["finished_time_string"]
