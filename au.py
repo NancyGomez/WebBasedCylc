@@ -2,10 +2,11 @@
 #needs incorporated with new app.py
 import requests
 import json
+from job import Job
 from os.path import expanduser
 
 hostName = 'nancy-VirtualBox'
-portNumber = 43086
+portNumber = 43019
 home = expanduser("~")
 #typical non-example suite path
 #passphraseFile = home+"/cylc-run/"+suiteName+"/.service/passphrase
@@ -18,11 +19,22 @@ auth = requests.auth.HTTPDigestAuth('cylc', passphrase)
 session = requests.Session()
 
 
+def parseJobs(suite_json):
+    jobs = []
+    index = 0
+    for job, job_dict in suite_json[1].items():
+        jobs.append( Job(job_dict) )
+        jobs[index].printJob()
+        index += 1
+        # uncomment to view raw json
+        # print "JOB ", job
+        # for k, v in value.items():
+        #     print k, v, '\n'
+    return jobs
 
 def _get_verify():
     """Return the server certificate if possible."""
     return "/home/nancy/cylc-run/my.suite/.service/ssl.cert"
-
 
 ret = session.get(
                     url,
@@ -30,5 +42,5 @@ ret = session.get(
                     verify=_get_verify()
                 )
 
-print ret.status_code
-print json.dumps(ret.json(), indent=4, sort_keys=True)
+response = ret.json()
+jobs = parseJobs(response)
