@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""cylc [control] reset [OPTIONS] ARGS
+
+Force one or more task proxies in a running suite to change state and modify
+their prerequisites and outputs accordingly.  For example, --state=waiting
+means "prerequisites not satisfied, outputs not completed"; --state=ready means
+"prerequisites satisfied, outputs not completed" (this generally has the same
+effect as using the "cylc trigger" command).
+
+"cylc reset --state=spawn" is deprecated: use "cylc spawn" instead.
+
+See the documentation for the -s/--state option for legal reset states."""
+
+import os
+import sys
+if '--use-ssh' in sys.argv[1:]:
+    sys.argv.remove('--use-ssh')
+    from cylc.remote import remrun
+    if remrun():
+        sys.exit(0)
+
+import cylc.flags
+from cylc.prompt import prompt
+from cylc.option_parsers import CylcOptionParser as COP
+from cylc.network.httpclient import SuiteRuntimeServiceClient
+from cylc.task_state import TASK_STATUSES_CAN_RESET_TO
+
+
+def main():
+    parser = COP(
+        __doc__, comms=True, multitask=True,
+        argdoc=[
+            ('REG', 'Suite name'),
+            ('[TASKID ...]', 'Task identifiers')])
+
+    parser.add_option(
+        "-s", "--state", metavar="STATE",
+        help="Reset task state to STATE, can be %s" % (
+            ', '.join(TASK_STATUSES_CAN_RESET_TO)),
+        choices=list(TASK_STATUSES_CAN_RESET_TO),
+        action="store", dest="state")
+
+    parser.add_option(
+        "--output", "-O",
+        metavar="OUTPUT",
+        help=("Find task output by message string or trigger string, " +
+              "set complete or incomplete with !OUTPUT, " +
+              "'*' to set all complete, '!*' to set all incomplete. " +
+              "Can be used more than once to reset multiple task outputs."),
+        action="append", default=[], dest="outputs")
+
+    options, args = parser.parse_args()
+
+    suite = args.pop(0)
+
+    if not options.state and not options.outputs:
+        parser.error("Neither --state=STATE nor --output=OUTPUT is set")
+
+    if options.state == "spawn":
+        # Back compat.
+        sys.stderr.write(
+            "'cylc reset -s spawn' is deprecated; calling 'cylc spawn'\n")
+        cmd = sys.argv[0].replace('reset', 'spawn')
+        try:
+            os.execvp(cmd, [cmd] + args)
+        except OSError, exc:
+            if exc.filename is None:
+                exc.filename = cmd
+            raise SystemExit(exc)
+
+    if not options.state:
+        options.state = ''
+
+    prompt('Reset task(s) %s in %s' % (args, suite), options.force)
+    pclient = SuiteRuntimeServiceClient(
+        suite, options.owner, options.host, options.port,
+        options.comms_timeout, my_uuid=options.set_uuid,
+        print_uuid=options.print_uuid)
+    items = parser.parse_multitask_compat(options, args)
+    pclient.put_command(
+        'reset_task_states', items=items, state=options.state,
+        outputs=options.outputs)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        if cylc.flags.debug:
+            raise
+        sys.exit(str(exc))

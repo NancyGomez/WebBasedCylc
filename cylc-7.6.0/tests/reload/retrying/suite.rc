@@ -1,0 +1,23 @@
+[meta]
+    title = "test that a reloaded retrying task does retry"
+    description = """this requires some state vars to be carried over to the
+new task proxy; ref github #945"""
+
+[cylc]
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout = PT30S
+[scheduling]
+    [[dependencies]]
+        graph = "retrier & reloader"
+[runtime]
+    [[retrier]]
+        script = "((CYLC_TASK_TRY_NUMBER >= 2)) || exit 1"
+        # ( '|| exit 1' required to trigger error trap in bash 4.2.0)
+        [[[job]]]
+            execution retry delays = 1*PT6S
+    [[reloader]]
+        script = """
+cylc suite-state --max-polls=10 --interval=1 --task=retrier --point=1 \
+    --status=retrying $CYLC_SUITE_NAME
+cylc reload $CYLC_SUITE_NAME"""

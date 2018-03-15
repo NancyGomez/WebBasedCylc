@@ -1,0 +1,13 @@
+#!jinja2
+[meta]
+    title = "Job script: test different failure traps based on batch system"
+[cylc]
+[scheduling]
+    [[dependencies]]
+        graph = root
+[runtime]
+    {% for batch_sys in ["at", "background", "loadleveler", "pbs", "sge", "slurm"] %}
+    [[foo_{{ batch_sys }}]]
+        [[[job]]]
+            batch system = {{ batch_sys }}
+    {% endfor %}

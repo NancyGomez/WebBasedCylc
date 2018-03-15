@@ -1,0 +1,32 @@
+
+[meta]
+    title = "Suite to test that restart after reload works."
+    description = """First task reloads and stops the suite,
+which should run to completion on restarting."""
+
+# The restart can be run as a reference test.
+
+[cylc]
+    UTC mode = True
+    [[reference test]]
+        required run mode = live
+        live mode suite timeout = PT2M
+[scheduling]
+    initial cycle point = 20100808T00
+    final cycle point = 20100809T00
+    runahead limit = PT12H
+    [[special tasks]]
+        sequential = foo
+    [[dependencies]]
+        [[[T00]]]
+            graph = "foo => bar"
+[runtime]
+    [[root]]
+        script = true
+    [[foo]]
+        script = """
+if [[ "$CYLC_TASK_CYCLE_POINT" == "$CYLC_SUITE_INITIAL_CYCLE_POINT" ]]; then
+    cylc reload $CYLC_SUITE_NAME
+    cylc stop $CYLC_SUITE_NAME
+    sleep 5
+fi"""

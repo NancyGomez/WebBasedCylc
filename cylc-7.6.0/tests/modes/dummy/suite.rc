@@ -1,0 +1,14 @@
+[cylc]
+    force run mode = dummy
+    [[reference test]]
+        dummy mode suite timeout = PT1M
+        allow task failures = True
+[scheduling]
+    [[dependencies]]
+        graph = """a:fail => b
+            b:fail => c
+            c:fail => !a & !b & !c"""
+[runtime]
+    [[a, b, c]]
+        [[[simulation]]]
+            fail cycle points = all

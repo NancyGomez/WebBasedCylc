@@ -1,0 +1,14 @@
+#!jinja2
+[scheduling]
+    [[dependencies]]
+        graph = foo & bar
+[runtime]
+    [[root]]
+        script = true
+    [[bar]]
+        [[[remote]]]
+            host = $(no-such-command)
+    [[foo]]
+        [[[job]]]
+            batch system = at
+            batch submit command template = no-such-command

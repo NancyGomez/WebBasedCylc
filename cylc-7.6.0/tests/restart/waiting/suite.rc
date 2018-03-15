@@ -1,0 +1,21 @@
+#!jinja2
+{%- set TEST_DIR = environ['TEST_DIR'] %}
+[cylc]
+    UTC mode = True
+    [[events]]
+        abort on timeout = True
+        timeout = PT3M
+[scheduling]
+    initial cycle point = 20130923T00
+    final cycle point   = 20130923T00
+    [[dependencies]]
+        [[[R1]]]
+            graph = """
+                shutdown => output_states
+                output_states => waiting_task => finish
+            """
+[runtime]
+    [[waiting_task]]
+        description = "Waiting task (runs after restart)"
+        script = true
+{% include 'suite-runtime-restart.rc' %}

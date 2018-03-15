@@ -1,0 +1,99 @@
+#!/bin/bash
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Check for cylc software dependencies
+
+usage() {
+    cat <<eof
+Usage: cylc [admin] check-software
+
+Check that the external software required by cylc is installed.
+
+Minimum versions are not checked, except in the case of Python.
+
+Options:
+  -h, --help   Print this help message and exit.
+eof
+}
+
+# handle long --help
+if [[ $@ == *\-\-help ]]; then
+    usage
+    exit 0
+fi
+
+while getopts "h" opt; do
+    case $opt in
+        h )
+            usage
+            exit 0
+            ;;
+        ? )
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+# Minimum Python version 2.6
+echo -n "Checking for Python >= 2.6 ... "
+PVER=$( python -V 2>&1 | awk '{print $2}' )
+echo -n "found ${PVER} ... "
+if python -c 'import sys; sys.exit(sys.version_info < (2,6))'; then
+    echo "ok"
+else
+    echo "ERROR: Python version too old"
+fi
+
+# non-Python packages
+echo "Checking for non-Python packages:"
+echo -n " + Graphviz ... "
+if ! which dot > /dev/null 2>&1; then
+    echo "NOT FOUND"
+else
+    echo "ok"
+fi
+
+# Python packages
+PKGS="pygraphviz:pygraphviz \
+pygtk:pygtk"
+
+
+echo "Checking for Python packages:"
+
+for ITEM in ${PKGS}; do
+    NAME=${ITEM%:*}
+    MODL=${ITEM#*:}
+
+    echo -n " + ${NAME} ... "
+    if ! python -c "import ${MODL}" > /dev/null 2>&1; then
+        echo "NOT FOUND"
+    else
+        echo "ok"
+    fi
+done
+
+# Check for the OpenSSL python package
+HTTPS_MODL="OpenSSL"
+echo -n " + ${HTTPS_MODL} ... "
+if ! python -c "import ${HTTPS_MODL}" > /dev/null 2>&1; then
+    echo "NOT FOUND...Install it, or else configure Cylc to run in http mode."
+else
+    echo "ok"
+fi
+

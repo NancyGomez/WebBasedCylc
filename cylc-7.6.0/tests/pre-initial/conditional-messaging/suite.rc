@@ -1,0 +1,24 @@
+[cylc]
+   UTC mode = True
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout = PT1M
+       expected task failures = bar.20100809T0000Z
+
+[scheduling]
+    initial cycle point = 20100808T00
+    final cycle point = 20100809T00
+    [[dependencies]]
+        [[[T00]]]
+            graph = """foo[-P1D]:restart1 | bar => foo
+                       foo => !bar"""
+[runtime]
+    [[foo]]
+        script = """
+sleep 1
+cylc message "restart files ready"
+sleep 1"""
+        [[[outputs]]]
+            restart1 = "restart files ready"
+    [[bar]]
+        script = [[ "$(cylc cycle-point)" == 20100808T0000Z ]]

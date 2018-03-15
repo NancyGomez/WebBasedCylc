@@ -1,0 +1,7 @@
+2013/10/06 23:32:30 INFO - Run mode: live
+2013/10/06 23:32:30 INFO - Initial point: 1
+2013/10/06 23:32:30 INFO - Final point: 1
+2013/10/06 23:32:30 INFO - [foo.1] -triggered off []
+2013/10/06 23:32:32 INFO - [greeter_2.1] -triggered off ['foo.1']
+2013/10/06 23:32:32 INFO - [greeter_1.1] -triggered off ['foo.1']
+2013/10/06 23:32:34 INFO - [bar.1] -triggered off ['greeter_1.1', 'greeter_2.1']

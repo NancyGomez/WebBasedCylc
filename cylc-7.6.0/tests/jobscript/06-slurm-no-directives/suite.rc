@@ -1,0 +1,14 @@
+[meta]
+    title = "Job script: no directives test for SLURM"
+
+[cylc]
+
+[scheduling]
+    [[dependencies]]
+        graph = foo
+
+[runtime]
+    [[foo]]
+        script = echo hello
+        [[[job]]]
+            batch system = slurm

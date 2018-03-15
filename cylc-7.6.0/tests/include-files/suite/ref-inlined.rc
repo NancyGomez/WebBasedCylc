@@ -1,0 +1,17 @@
+[meta]
+    title = "A test with nested include-files"
+
+[scheduling]
+    initial cycle point = 20130101T00
+    final cycle point = 20130101T00
+    [[dependencies]]
+        [[[R1]]]
+            graph = foo => bar
+        [[[T00]]]
+            graph = bar
+[runtime]
+    [[root]]
+        script = "echo Hello World"
+
+[visualization]
+    default node attributes = "style=filled"

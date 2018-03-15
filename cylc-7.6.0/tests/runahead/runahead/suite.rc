@@ -1,0 +1,17 @@
+[cylc]
+    cycle point time zone = Z
+    [[events]]
+        timeout = PT30S
+        abort on timeout = True
+[scheduling]
+    runahead limit = PT18H
+    initial cycle point = 20100101T00
+    final cycle point = 20100105T00
+    [[dependencies]]
+        [[[PT6H]]]
+            graph = "foo => bar"
+[runtime]
+    [[foo]]
+        script = false
+    [[bar]]
+        script = true

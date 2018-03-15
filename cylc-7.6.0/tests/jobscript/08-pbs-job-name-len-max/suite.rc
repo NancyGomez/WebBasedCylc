@@ -1,0 +1,11 @@
+#!jinja2
+[meta]
+    title = "Job script: test PBS job name maximum length"
+[cylc]
+[scheduling]
+    [[dependencies]]
+        graph = abcdefghijklmnopqrstuvwxyz_0123456789
+[runtime]
+    [[abcdefghijklmnopqrstuvwxyz_0123456789]]
+        [[[job]]]
+            batch system = pbs

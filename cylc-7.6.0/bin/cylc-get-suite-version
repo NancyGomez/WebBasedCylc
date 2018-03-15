@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""cylc [info] get-suite-version [OPTIONS] ARGS
+
+Interrogate running suite REG to find what version of cylc is running it.
+
+To find the version you've invoked at the command line see "cylc version"."""
+
+import sys
+if '--use-ssh' in sys.argv[1:]:
+    sys.argv.remove('--use-ssh')
+    from cylc.remote import remrun
+    if remrun():
+        sys.exit(0)
+
+import cylc.flags
+from cylc.option_parsers import CylcOptionParser as COP
+from cylc.network.httpclient import SuiteRuntimeServiceClient
+
+
+def main():
+    parser = COP(__doc__, comms=True, argdoc=[('REG', 'Suite name')])
+
+    (options, args) = parser.parse_args()
+    suite = args[0]
+
+    pclient = SuiteRuntimeServiceClient(
+        suite, options.owner, options.host, options.port,
+        options.comms_timeout, my_uuid=options.set_uuid,
+        print_uuid=options.print_uuid)
+    print pclient.get_info('get_cylc_version')
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        if cylc.flags.debug:
+            raise
+        sys.exit(str(exc))

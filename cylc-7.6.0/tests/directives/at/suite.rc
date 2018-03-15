@@ -1,0 +1,22 @@
+[cylc]
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout = PT2.5M
+       expected task failures = rem2.1
+[scheduling]
+    [[dependencies]]
+        graph = """rem1 => rem2
+                   rem2:start => killer => !rem2
+                   """
+[runtime]
+    [[ATSETTINGS]]
+        [[[job]]]
+            batch system = at
+    [[rem1]]
+        inherit = ATSETTINGS
+        script = "sleep 10; true"
+    [[rem2]]
+        inherit = ATSETTINGS
+        script = "sleep 30"
+    [[killer]]
+        script = cylc kill -f "$CYLC_SUITE_NAME" 'rem2'; sleep 10

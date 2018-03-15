@@ -1,0 +1,74 @@
+# Configuration for the Travis continuous integration system
+# ==========================================================
+# 
+# Travis is a free service for running automatic tests on Github repositories.
+# This file configures Travis for Cylc, telling it how to install Cylc and run
+# the test battery.
+# 
+# Test results get posted back to Github. By default Travis will run tests on any
+# pull requests, adding a comment on the pull request page to say if the tests
+# pass or fail, it will also test any new commits, showing the test results on
+# the branch page, e.g. https://github.com/cylc/cylc/branches.
+# 
+# Connecting a Cylc branch
+# ------------------------
+# 
+# To make use of Travis you will first need to create a fork of Cylc in Github.
+# Log in to https://travis-ci.org using your Github credentials, it will ask for
+# permission to see your repositories, set the status of branches (whether the
+# build passes or fails tests) and create hooks so Travis gets notified of new
+# commits.
+# 
+# Travis will create a list of all of your public Github repositories, you can
+# enable automatic tests for a repository using the switches in this list.
+# 
+# More information for Travis can be found at http://docs.travis-ci.com/user/getting-started/
+
+---
+language: python
+
+# General environment setup before we start installing stuff
+before_install:
+    # Clear bashrc - the default does nothing if not in an interactive shell.
+    # SSH connections use the ~/.bashrc file for their environment, so we'll be
+    # loading our python environment here.
+    - echo > ~/.bashrc
+
+    # Setup virtualenv (using system packages for pygtk as pip won't install it)
+    - virtualenv --system-site-packages $HOME/virtualenv/cylc 
+    - echo "source $HOME/virtualenv/cylc/bin/activate" >> ~/.bashrc
+
+    # Make sure Cylc is in PATH when running jobs
+    - echo "export PATH=$PWD/bin:\$PATH" >> ~/.bashrc
+
+    # Load our new environment
+    - source ~/.bashrc
+
+# These commands are run before the test
+install: 
+    # Setup local SSH for Cylc jobs
+    - ssh-keygen -t rsa -f ~/.ssh/id_rsa -N "" -q
+    - cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+    - ssh-keyscan -t rsa localhost >> ~/.ssh/known_hosts
+
+    # Install dependencies
+    - sudo apt-get install build-essential texlive-latex-base
+    - sudo apt-get install at python-pip python-dev graphviz libgraphviz-dev python-gtk2-dev
+      heirloom-mailx
+    # Pygraphviz needs special treatment to avoid an error from "from . import release"
+    - pip install pygraphviz --install-option="--include-path=/usr/include/graphviz" --install-option="--library-path=/usr/lib/graphviz/"
+    - pip install pycodestyle pyopenssl
+
+# Run tests
+script: 
+    # Custom diff command to ignore Xlib errors (xvfb has not RANDR extension).
+    - export CYLC_TEST_DIFF_CMD='diff -I Xlib -u'
+    # Only run the generic tests on Travis CI.
+    - export CYLC_TEST_RUN_PLATFORM=false
+    # Run tests with virtual frame buffer for X support.
+    - xvfb-run -a cylc test-battery --state=save -j 5 || (echo -e "\n\nRerunning Failed Tests...\n\n"; cylc test-battery --state=save,failed -j 5)
+
+# Check output (more useful if you narrow down what tests get run)
+after_script:
+    - find $HOME/cylc-run -name '*.err' -type f -exec echo '==== {} ====' \; -exec cat '{}' \;
+    - find /tmp/${USER}/cylctb-* -type f -exec echo '==== {} ====' \; -exec cat '{}' \;

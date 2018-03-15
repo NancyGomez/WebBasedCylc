@@ -1,0 +1,12 @@
+[cylc]
+    [[events]]
+        startup handler = "/bin/false"
+        abort if startup handler fails = True
+
+[scheduling]
+    [[dependencies]]
+        graph = "foo"
+
+[runtime]
+    [[root]]
+        script = "/bin/true" # no sleep

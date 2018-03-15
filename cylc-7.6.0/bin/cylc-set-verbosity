@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""cylc [control] set-verbosity [OPTIONS] ARGS
+
+Change the logging severity level of a running suite.  Only messages at
+or above the chosen severity level will be logged; for example, if you
+choose WARNING, only warnings and critical messages will be logged."""
+
+from logging import CRITICAL, ERROR, WARNING, INFO, DEBUG
+import sys
+
+if '--use-ssh' in sys.argv[1:]:
+    sys.argv.remove('--use-ssh')
+    from cylc.remote import remrun
+    if remrun():
+        sys.exit(0)
+
+import cylc.flags
+from cylc.prompt import prompt
+from cylc.option_parsers import CylcOptionParser as COP
+from cylc.network.httpclient import SuiteRuntimeServiceClient
+
+LOGGING_LVL_OF = {
+    "INFO": INFO,
+    "NORMAL": INFO,
+    "WARNING": WARNING,
+    "ERROR": ERROR,
+    "CRITICAL": CRITICAL,
+    "DEBUG": DEBUG,
+}
+
+
+def main():
+    parser = COP(
+        __doc__, comms=True,
+        argdoc=[
+            ('REG', 'Suite name'),
+            ('LEVEL', ', '.join(LOGGING_LVL_OF.keys()))
+        ]
+    )
+    (options, args) = parser.parse_args()
+    suite = args[0]
+
+    severity_str = args[1]
+    try:
+        severity = LOGGING_LVL_OF[severity_str]
+    except KeyError:
+        parser.error("Illegal logging level, %s" % severity)
+
+    prompt("Set logging level to %s in %s" % (severity_str, suite),
+           options.force)
+    pclient = SuiteRuntimeServiceClient(
+        suite, options.owner, options.host, options.port,
+        options.comms_timeout, my_uuid=options.set_uuid,
+        print_uuid=options.print_uuid)
+
+    pclient.put_command('set_verbosity', level=severity)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        if cylc.flags.debug:
+            raise
+        sys.exit(str(exc))

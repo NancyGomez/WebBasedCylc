@@ -1,0 +1,148 @@
+#!/usr/bin/env python
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""cylc [discovery] check-versions [OPTIONS] ARGS
+
+Check the version of cylc invoked on each of SUITE's task host accounts when
+CYLC_VERSION is set to *the version running this command line tool*.
+Different versions are reported but are not considered an error unless the
+-e|--error option is specified, because different cylc versions from 6.0.0
+onward should at least be backward compatible.
+
+It is recommended that cylc versions be installed in parallel and access
+configured via the cylc version wrapper as described in the cylc INSTALL
+file and User Guide. This must be done on suite and task hosts. Users then get
+the latest installed version by default, or (like tasks) a particular version
+if $CYLC_VERSION is defined.
+
+User -v/--verbose to see the command invoked to determine the remote version
+(all remote cylc command invocations will be of the same form, which may be
+site dependent -- see cylc global config documentation."""
+
+import os
+import sys
+from subprocess import Popen, PIPE
+from time import sleep
+
+import cylc.flags
+from cylc.option_parsers import CylcOptionParser as COP
+from cylc.version import CYLC_VERSION
+from cylc.config import SuiteConfig
+from cylc.mp_pool import SuiteProcPool
+from cylc.suite_srv_files_mgr import SuiteSrvFilesManager
+from cylc.task_remote_mgr import TaskRemoteMgr
+from cylc.templatevars import load_template_vars
+
+
+def main():
+    parser = COP(__doc__, prep=True, jset=True)
+
+    parser.add_option(
+        "-e", "--error", help="Exit with error status "
+        "if " + CYLC_VERSION + " is not available on all remote accounts.",
+        action="store_true", default=False, dest="error")
+
+    (options, args) = parser.parse_args(remove_opts=['--host', '--user'])
+
+    # suite name or file path
+    suite_srv_files_mgr = SuiteSrvFilesManager()
+    suite, suiterc = suite_srv_files_mgr.parse_suite_arg(options, args[0])
+
+    # extract task host accounts from the suite
+    config = SuiteConfig(
+        suite, suiterc,
+        load_template_vars(options.templatevars, options.templatevars_file))
+    account_set = set()
+    for name in config.get_namespace_list('all tasks'):
+        account_set.add((
+            config.get_config(['runtime', name, 'remote', 'owner']),
+            config.get_config(['runtime', name, 'remote', 'host'])))
+    task_remote_mgr = TaskRemoteMgr(
+        suite, SuiteProcPool(), suite_srv_files_mgr)
+    for _, host_str in account_set:
+        task_remote_mgr.remote_host_select(host_str)
+    accounts = []
+    while account_set:
+        for user, host_str in account_set.copy():
+            res = task_remote_mgr.remote_host_select(host_str)
+            if res:
+                account_set.remove((user, host_str))
+                accounts.append((user, res))
+        if account_set:
+            task_remote_mgr.proc_pool.handle_results_async()
+            sleep(1.0)
+
+    # Interrogate the each remote account with CYLC_VERSION set to our version.
+    # Post backward compatibility concerns to do this we can just run:
+    #   cylc version --host=HOST --user=USER
+    # but this command only exists for version > 6.3.0.
+    # So for the moment generate an actual remote invocation command string for
+    # "cylc -v".
+
+    # (save verbose flag as gets reset in remrun)
+    verbose = cylc.flags.verbose
+
+    warn = {}
+    contacted = 0
+    for user, host in sorted(accounts):
+        argv = ["cylc", "version"]
+        if user and host:
+            argv += ["--user=%s" % user, "--host=%s" % host]
+            user_at_host = "%s@%s" % (user, host)
+        elif user:
+            argv += ["--user=%s" % user]
+            user_at_host = "%s@localhost" % user
+        elif host:
+            argv += ["--host=%s" % host]
+            user_at_host = host
+        if verbose:
+            print "%s: %s" % (user_at_host, ' '.join(argv))
+        proc = Popen(argv, stdin=open(os.devnull), stdout=PIPE, stderr=PIPE)
+        out, err = proc.communicate()
+        if proc.wait() == 0:
+            if verbose:
+                print "   %s" % out
+            contacted += 1
+            out = out.strip()
+            if out != CYLC_VERSION:
+                warn[user_at_host] = out
+        else:
+            print >> sys.stderr, 'ERROR ' + user_at_host + ':'
+            print >> sys.stderr, err
+
+    # report results
+    if not warn:
+        if contacted:
+            print "All", contacted, "accounts have cylc-" + CYLC_VERSION
+    else:
+        print "WARNING: failed to invoke cylc-%s on %d accounts:" % (
+            CYLC_VERSION, len(warn.keys()))
+        m = max(len(ac) for ac in warn)
+        for ac, warning in warn.items():
+            print ' ', ac.ljust(m), warning
+        if options.error:
+            sys.exit(1)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        if cylc.flags.debug:
+            raise
+        sys.exit(str(exc))

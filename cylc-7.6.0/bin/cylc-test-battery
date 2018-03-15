@@ -1,0 +1,144 @@
+#!/bin/bash
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -u
+
+usage() {
+  cat <<eof
+Usage: cylc test-battery [...]
+
+Run automated cylc and parsec tests under [FILES or DIRECTORIES].
+Test locations default to the following directory tree:
+  $CYLC_DIR/tests/
+
+Some tests (e.g. those specific to particular batch schedulers) can be
+configured in your site/user config file. A few others still submit jobs
+to a user@host account taken from the environment:
+  \$CYLC_TEST_TASK_HOST # default localhost
+  \$CYLC_TEST_TASK_OWNER # defaut \$USER
+
+Requirements:
+  * Passwordless ssh must be configured to task host accounts.
+  * Some test suites submit jobs to 'at' so atd must be running.
+
+Options and arguments are appended to the "prove -j \$NPROC -s -r \${@:-tests}"
+command, where NPROC is the number of child processes that can be used to run
+the test files.
+
+Some tests use a clean global config file. If some items from your site config
+file are needed in this, e.g. to get remote test hosts working, add them to
+$CYLC_DIR/conf/global-tests.rc.
+
+The command normally uses the "process pool size" setting (default=4) in the
+site/user global configuration file to determine the number of tests to run in
+parallel. You can also change the amount of concurrency with the "-j N" option.
+
+Suite run directories are cleaned up on the suite host for passing tests -
+otherwise they are left alone.
+
+To output stderr from failed tests to the terminal,
+"export CYLC_TEST_DEBUG=true" before running this command.
+
+The command normally uses "diff -u" to compare files.  However, if an alternate
+command such as "xxdiff -D" is desirable (e.g. for debugging), "export
+CYLC_TEST_DIFF_CMD=xxdiff -D".
+
+Commits or Pull Requests to cylc/cylc on GitHub will trigger Travis CI to run
+generic (non platform-specific) tests - see $CYLC_DIR/.travis.yml.
+After enabling Travis CI for your own cylc fork, you can skip generic tests
+locally by setting CYLC_TEST_RUN_GENERIC=false.
+
+By default all tests are executed.  To run just a subset of them:
+  * list individual tests or test directories to run on the comand line
+  * list individual tests or test directories to skip in \$CYLC_TEST_SKIP
+  * skip all generic tests with CYLC_TEST_RUN_GENERIC=false
+  * skip all platform-specific tests with CYLC_TEST_RUN_PLATFORM=false
+  List specific tests relative to $CYLC_DIR (i.e. starting with "test/").
+Some platform-specific tests are automatically skipped, depending on platform.
+
+FOR DEVELOPERS:
+  * Platform-specific tests must set "CYLC_TEST_IS_GENERIC=false" before
+    sourcing the test_header.
+  * Tests requiring the sqlite3 CLI must be skipped if sqlite3 is not installed
+    (it is not otherwise a Cylc software prerequisite):
+| if ! which sqlite3 > /dev/null; then
+|     # Skip the remaining 3 tests.
+|     skip 3 "sqlite3 not installed?"
+|     purge_suite \$SUITE_NAME
+|     exit 0
+| fi
+
+For more information see "Reference Tests" in the User Guide.
+
+Options:
+  -h, --help   Print this help message and exit.
+
+Examples:
+
+Run the full test suite with the default options.
+  cylc test-battery
+Run the full test suite with 12 processes.
+  cylc test-battery -j 12
+Run only tests under "tests/cyclers/" with 12 processes.
+  cylc test-battery -j 12 tests/cyclers
+Run only "tests/cyclers/16-weekly.t" in verbose mode
+  cylc test-battery -v tests/cyclers/16-weekly.t
+Run only tests under "tests/cyclers/" with 12 processes, and skip 00-daily.t
+  export CYLC_TEST_SKIP=tests/cyclers/00-daily.t
+  cylc test-battery -j 12 tests/cyclers
+eof
+}
+
+TESTS=""
+
+# Defaults.
+export CYLC_TEST_RUN_GENERIC=${CYLC_TEST_RUN_GENERIC:-true}
+export CYLC_TEST_RUN_PLATFORM=${CYLC_TEST_RUN_PLATFORM:-true}
+export CYLC_TEST_SKIP=${CYLC_TEST_SKIP:-}
+export CYLC_TEST_IS_GENERIC=true
+export CYLC_TEST_TIME_INIT="$(date -u +'%Y%m%dT%H%M%SZ')"
+
+for ARG in "$@"; do
+    if [[ "$ARG" == '--help' || "$ARG" == '-h' ]]; then
+        usage
+        exit 0
+    fi
+done
+
+if [[ "$PWD" != "$CYLC_DIR" ]]; then
+    echo "cd \"$CYLC_DIR\""
+    cd "$CYLC_DIR"
+fi
+
+# Recompile *.pyc files to ensure we are running the current code.
+if [[ -w "$CYLC_DIR/lib" ]]; then
+    find "$CYLC_DIR/lib" -name '*.pyc' -type 'f' -delete
+    python -mcompileall -q "$CYLC_DIR/lib"
+fi
+
+if perl -e 'use Test::Harness 3.00' 2>/dev/null; then
+    NPROC=$(cylc get-global-config '--item=process pool size')
+    if [[ -z "${NPROC}" ]]; then
+        NPROC=$(python -c 'import multiprocessing as mp; print mp.cpu_count()')
+    fi
+    exec prove -j "$NPROC" -s -r "${@:-tests}"
+else
+    echo "WARNING: cannot run tests in parallel (Test::Harness < 3.00)" >&2
+    exec prove -s -r "${@:-tests}"
+fi
+

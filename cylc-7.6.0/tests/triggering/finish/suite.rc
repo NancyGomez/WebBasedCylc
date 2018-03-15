@@ -1,0 +1,17 @@
+[cylc]
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout = PT30S
+       allow task failures = True
+       expected task failures = foo.1
+
+[scheduling]
+    [[dependencies]]
+        graph = """foo:finish => bar
+                   bar => !foo
+                   baz:finish => qux"""
+[runtime]
+    [[foo]]
+        script = "false"
+    [[bar,baz,qux]]
+        script = "true"

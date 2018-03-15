@@ -1,0 +1,10 @@
+[cylc]
+    [[events]]
+        timeout = PT5M
+        abort on timeout = True
+[scheduling]
+    [[dependencies]]
+        graph = foo
+[runtime]
+    [[foo]]
+        script = false

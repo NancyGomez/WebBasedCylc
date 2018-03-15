@@ -1,0 +1,14 @@
+[cylc]
+   UTC mode = True
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout=PT1M
+[scheduling]
+    initial cycle point = 20100101T00
+    final cycle point = 20100102T00
+    [[dependencies]]
+        [[[T00]]]
+            graph = "a[-PT24H] => a"
+[runtime]
+    [[a]]
+        script = "sleep 1"

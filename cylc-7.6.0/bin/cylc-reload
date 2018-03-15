@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""cylc [control] reload [OPTIONS] ARGS
+
+Tell a suite to reload its definition at run time. All settings
+including task definitions, with the exception of suite log
+configuration, can be changed on reload. Note that defined tasks can be
+be added to or removed from a running suite with the 'cylc insert' and
+'cylc remove' commands, without reloading. This command also allows
+addition and removal of actual task definitions, and therefore insertion
+of tasks that were not defined at all when the suite started (you will
+still need to manually insert a particular instance of a newly defined
+task). Live task proxies that are orphaned by a reload (i.e. their task
+definitions have been removed) will be removed from the task pool if
+they have not started running yet. Changes to task definitions take
+effect immediately, unless a task is already running at reload time.
+
+If the suite was started with Jinja2 template variables set on the
+command line (cylc run --set FOO=bar REG) the same template settings
+apply to the reload (only changes to the suite.rc file itself are
+reloaded).
+
+If the modified suite definition does not parse, failure to reload will
+be reported but no harm will be done to the running suite."""
+
+import sys
+if '--use-ssh' in sys.argv[1:]:
+    sys.argv.remove('--use-ssh')
+    from cylc.remote import remrun
+    if remrun():
+        sys.exit(0)
+
+import cylc.flags
+from cylc.option_parsers import CylcOptionParser as COP
+from cylc.network.httpclient import SuiteRuntimeServiceClient
+from cylc.prompt import prompt
+
+
+def main():
+    parser = COP(__doc__, comms=True)
+    (options, args) = parser.parse_args()
+    suite = args[0]
+
+    prompt('Reload %s' % suite, options.force)
+    pclient = SuiteRuntimeServiceClient(
+        suite, options.owner, options.host, options.port,
+        options.comms_timeout, my_uuid=options.set_uuid,
+        print_uuid=options.print_uuid)
+    pclient.put_command('reload_suite')
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        if cylc.flags.debug:
+            raise
+        sys.exit(str(exc))

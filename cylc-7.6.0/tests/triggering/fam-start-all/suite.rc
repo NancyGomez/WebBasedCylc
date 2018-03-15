@@ -1,0 +1,15 @@
+[cylc]
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout=PT1M
+
+[scheduling]
+    [[dependencies]]
+        graph = """FAM:start-all => foo"""
+[runtime]
+    [[FAM]]
+        script = "sleep 5"
+    [[a,b,c]]
+        inherit = FAM
+    [[foo]]
+        script = "true"

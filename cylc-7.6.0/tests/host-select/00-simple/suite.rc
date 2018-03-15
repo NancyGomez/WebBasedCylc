@@ -1,0 +1,31 @@
+#!Jinja2
+
+{% set OWNER = environ['CYLC_TEST_TASK_OWNER'] %}
+
+[meta]
+    title = "Test external task host selection"
+
+    description = """
+Task host is determined by a script in the suite bin directory; for this
+test suite it just returns the value of $CYLC_TEST_TASK_HOST as used 
+by many of the other test suites (see "cylc test-battery --help")."""
+
+[cylc]
+    [[reference test]]
+        live mode suite timeout = PT30S
+        suite shutdown event handler = cleanup.sh
+[scheduling]
+    [[dependencies]]
+        graph = "foo1 & foo2 & foo3 & bar"
+[runtime]
+    [[root]]
+        script = "/bin/true" # fast
+    [[foo1, foo2, foo3]]
+        [[[remote]]]
+            # in suite bin directory:
+            host = $(host-select.sh) # returns value of $CYLC_TEST_TASK_HOST
+            owner = {{ OWNER }}
+    [[bar]]
+        [[[remote]]]
+            host = $CYLC_TEST_TASK_HOST
+            owner = {{ OWNER }}

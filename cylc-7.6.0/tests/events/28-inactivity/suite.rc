@@ -1,0 +1,19 @@
+[cylc]
+    UTC mode = True
+    [[events]]
+        inactivity = PT10S
+        abort on inactivity = True
+        abort on timeout = True
+    [[reference test]]
+        live mode suite timeout=PT1M
+
+[scheduling]
+    [[dependencies]]
+        graph = foo
+
+[runtime]
+    [[foo]]
+        script = """
+trap '' EXIT
+exit
+"""

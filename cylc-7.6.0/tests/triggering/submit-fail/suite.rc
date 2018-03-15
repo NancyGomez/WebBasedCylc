@@ -1,0 +1,18 @@
+[cylc]
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout = PT30S
+       allow task failures = True
+       expected task failures = foo.1
+
+[scheduling]
+    [[dependencies]]
+        graph = """foo:submit-fail => bar
+                   bar => !foo"""
+[runtime]
+    [[foo]]
+        script = "true"
+        [[[remote]]]
+            host=idontexist
+    [[bar]]
+        script = "true"

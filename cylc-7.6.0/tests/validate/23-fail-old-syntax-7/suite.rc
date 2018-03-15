@@ -1,0 +1,14 @@
+[cylc]
+    [[events]]
+        timeout        = 4320
+[scheduling]
+    initial cycle time = 2014030300
+    final cycle time   = 2014030306
+    [[dependencies]]
+        [[[0,6,12,18]]]
+           graph = " A "
+[runtime]
+    [[A]]
+        script = "sleep 10"
+        [[[job]]]
+            execution retry delays = 2*PT30M, PT60M

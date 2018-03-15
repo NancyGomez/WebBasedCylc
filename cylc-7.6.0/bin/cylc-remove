@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+
+# THIS FILE IS PART OF THE CYLC SUITE ENGINE.
+# Copyright (C) 2008-2018 NIWA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+"""cylc [control] remove [OPTIONS] ARGS
+
+Remove one or more tasks (cylc remove REG TASKID), or all tasks with a
+given cycle point (cylc remove REG *.POINT) from a running suite.
+
+Tasks will spawn successors first if they have not done so already.
+"""
+
+import sys
+if '--use-ssh' in sys.argv[1:]:
+    sys.argv.remove('--use-ssh')
+    from cylc.remote import remrun
+    if remrun():
+        sys.exit(0)
+
+import cylc.flags
+from cylc.prompt import prompt
+from cylc.option_parsers import CylcOptionParser as COP
+from cylc.network.httpclient import SuiteRuntimeServiceClient
+
+
+def main():
+    parser = COP(
+        __doc__, comms=True, multitask=True,
+        argdoc=[
+            ("REG", "Suite name"),
+            ('TASKID [...]', 'Task identifiers')])
+
+    parser.add_option(
+        "--no-spawn",
+        help="Do not spawn successors before removal.",
+        action="store_true", default=False, dest="no_spawn")
+
+    options, args = parser.parse_args()
+
+    suite = args.pop(0)
+    prompt('remove task(s) %s in %s' % (args, suite), options.force)
+    pclient = SuiteRuntimeServiceClient(
+        suite, options.owner, options.host, options.port,
+        options.comms_timeout, my_uuid=options.set_uuid,
+        print_uuid=options.print_uuid)
+    items = parser.parse_multitask_compat(options, args)
+    pclient.put_command('remove_tasks', items=items,
+                        spawn=(not options.no_spawn))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        if cylc.flags.debug:
+            raise
+        sys.exit(str(exc))

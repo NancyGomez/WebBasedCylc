@@ -1,0 +1,45 @@
+
+# python bytecode
+*.pyc
+
+# Generated documentation files.
+# - User Guide.
+doc/src/cylc-user-guide/pdf
+doc/src/cylc-user-guide/html
+doc/src/cylc-user-guide/commands.tex
+doc/src/cylc-user-guide/cylc-version.txt
+# - Suite Design Guide.
+doc/src/suite-design-guide/*.aux
+doc/src/suite-design-guide/*.out
+doc/src/suite-design-guide/*.pdf
+doc/src/suite-design-guide/*.log
+doc/src/suite-design-guide/*.toc
+# Installed docs.
+doc/install/
+
+# VERSION FILE
+VERSION
+
+# vim backup files
+*.swp
+
+# emacs backup files
+*~
+
+# ordereddict-0.4.5 build 
+ext/ordereddict-0.4.5/build
+
+# site configuration and processed configuration
+conf/job-init-env.sh
+conf/global.rc*
+conf/siterc
+conf/*/*.rc.processed
+
+# processed suite definitions
+*.rc.processed
+
+# suite passphrases
+passphrase
+
+# profiling
+.profiling

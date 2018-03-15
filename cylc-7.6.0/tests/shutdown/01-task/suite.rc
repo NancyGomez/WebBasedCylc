@@ -1,0 +1,16 @@
+[cylc]
+    UTC mode = True
+    [[reference test]]
+        live mode suite timeout = PT50S
+[scheduling]
+    initial cycle point = 20100101T00
+    final cycle point = 20100105T00
+    [[dependencies]]
+        [[[PT6H]]]
+            graph = "c[-PT6H] => a => stopper => c"
+[runtime]
+    [[a,c]]
+        script = "true"
+    [[stopper]]
+        script = """
+cylc shutdown $CYLC_SUITE_NAME a.20100101T06; sleep 5"""

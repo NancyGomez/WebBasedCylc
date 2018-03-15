@@ -1,0 +1,20 @@
+[cylc]
+   UTC mode = True
+   [[reference test]]
+       required run mode = live
+       live mode suite timeout = PT1M
+[scheduling]
+    initial cycle point = 20130130T00
+    final cycle point =   20130202T00
+    runahead limit = PT12H # Enforces sequential behaviour
+    [[dependencies]]
+        # (this triggers a monthly task off the last daily task each month)
+        [[[T00]]]
+            graph = """
+                daily
+            daily[-PT24H] => dummy""" # marker1
+        [[[R/01T/P1M]]]
+            graph = "dummy => monthly" # marker2
+[runtime]
+    [[root]]
+        script = "sleep 1"

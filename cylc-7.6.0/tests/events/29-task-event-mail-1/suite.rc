@@ -1,0 +1,22 @@
+#!jinja2
+[meta]
+    title=Task Event Mail
+
+[cylc]
+    [[events]]
+        mail footer = see: http://localhost/stuff/%(owner)s/%(suite)s/
+    [[reference test]]
+        live mode suite timeout=PT1M
+
+[scheduling]
+    [[dependencies]]
+        graph=t1
+
+[runtime]
+    [[t1]]
+        script=test "${CYLC_TASK_TRY_NUMBER}" -eq 2
+        [[[job]]]
+            execution retry delays = PT1S
+        [[[events]]]
+            mail events = failed, retry
+            mail smtp = {{MAIL_SMTP}}

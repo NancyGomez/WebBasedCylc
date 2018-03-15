@@ -1,0 +1,28 @@
+[meta]
+    title = "override this"
+    title = "the quick brown fox"
+[cylc]
+    UTC mode = True
+[scheduling]
+    initial cycle point = 20130101T0000Z
+    [[dependencies]]
+        [[[R1]]]
+            graph = "foo => bar"
+            graph = "bar => baz"
+        [[[T00]]]
+            graph = "cfoo => cbar"
+            graph = "cbar => cbaz"
+        [[[T00]]]
+            graph = "dfoo => dbar"
+            graph = "dbar => dbaz"
+[runtime]
+    [[FOO]]
+        title = "override this"
+        title = "override this too"
+        description = "jumped over the lazy dog"
+    [[FOO]]
+        title = "the quick brown fox"
+        [[[environment]]]
+            VAR1 = "override this"
+            VAR1 = "override this too"
+            VAR1 = "the quick brown fox"

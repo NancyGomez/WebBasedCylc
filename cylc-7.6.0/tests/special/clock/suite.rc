@@ -1,0 +1,17 @@
+#!Jinja2
+[cylc]
+    UTC mode = {{UTC_MODE}}
+    [[events]]
+        abort on inactivity = True
+        inactivity = {{TIMEOUT}}
+[scheduling]
+    initial cycle point = {{START}}
+    final cycle point   = {{START}}
+    [[special tasks]]
+        clock-triggered = clock{% if OFFSET is defined %}({{OFFSET}}){% endif %}
+    [[dependencies]]
+        [[[T{{HOUR}}]]]
+            graph = "clock"
+[runtime]
+    [[clock]]
+        script = true
