@@ -16,14 +16,11 @@ Including another URLconf
 
 
 TUTORIAL NOTE:
-The include() function allows referencing other URLconfs. Note that the regular expressions for the include() function doesn’t have a $ (end-of-string match character) but rather a trailing slash. Whenever Django encounters include(), it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
-
-The idea behind include() is to make it easy to plug-and-play URLs. Since polls are in their own URLconf (polls/urls.py), they can be placed under “/polls/”, or under “/fun_polls/”, or under “/content/polls/”, or any other path root, and the app will still work.
 """
 from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^Cylc_webapp/', include('Cylc_webapp.urls')),
+    url(r'^cylc_webapp/', include('cylc_webapp.urls')),
     url(r'^admin/', admin.site.urls),
 ]

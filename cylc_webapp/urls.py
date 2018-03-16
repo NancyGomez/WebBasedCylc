@@ -1,6 +1,5 @@
-#this file registers urls for the app
-
-from django.conf.urls import url
+from django.conf.urls import include, url
+from django.contrib import admin
 
 from . import views
 

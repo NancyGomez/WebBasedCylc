@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class CylcWebappConfig(AppConfig):
-    name = 'Cylc_webapp'
+    name = 'cylc_webapp'

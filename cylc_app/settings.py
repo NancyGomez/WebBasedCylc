@@ -25,7 +25,7 @@ SECRET_KEY = 'qrt=b=berv=rk5k8r83qyww*#7b-f)1p+8%t2bjqzg0ee5$d*c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [u'cylc-capstone-sp18-bigbrotherx52.c9users.io']
 
 
 # Application definition
