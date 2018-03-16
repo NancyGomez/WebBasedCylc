@@ -43,7 +43,7 @@
 #    task messaging commands etc. pick up the compatible cylc version.
 # * Note that $CYLC_ROOT_HOME can be overridden in the environment too.
 
-CYLC_HOME_ROOT=${CYLC_HOME_ROOT:-/home/ubuntu} # !!! EDIT ME !!!
+CYLC_HOME_ROOT=${CYLC_HOME_ROOT:-~/workspace/ } # !!! EDIT ME !!!
 
 if [[ -z ${CYLC_HOME:-} ]]; then
     if [[ -n ${CYLC_VERSION:-} && -d $CYLC_HOME_ROOT/cylc-$CYLC_VERSION ]]; then

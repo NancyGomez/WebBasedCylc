@@ -42,6 +42,7 @@ necessary. The wrapper should be edited to point to the Cylc install location:
 
 ```bash
 cp /opt/cylc-7.4.0/admin/cylc-wrapper /usr/local/bin/cylc
+cp ~/workspace/cylc-7.6.0/admin/cylc-wrapper //usr/local/bin/cylc     
 # (now edit '/usr/local/bin/cylc' as per in-file instructions...)
 ```
 
