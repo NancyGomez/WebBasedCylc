@@ -1,42 +1,25 @@
+##Necessary steps for this to run:
 
-     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
-    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
-    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
-    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
-     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
-    ----------------------------------------------------------------- 
+**cylc** command must work (check to see it's in the path if not)
 
+`PATH=$PATH:/home/ubuntu/workspace/cylc/bin`
 
-Welcome to your Django project on Cloud9 IDE!
+Next, make sure your cylc instance is running by checking 
 
-Your Django project is already fully setup. Just click the "Run" button to start
-the application. On first run you will be asked to create an admin user. You can
-access your application from 'https://cylc-capstone-sp18-bigbrotherx52.c9users.io/' and the admin page from 
-'https://cylc-capstone-sp18-bigbrotherx52.c9users.io/admin'.
+`cylc scan -s`
 
-## Starting from the Terminal
+If nothing prints you need to run your instance
 
-In case you want to run your Django application from the terminal just run:
+`cylc run my.suite`
 
-1) Run syncdb command to sync models to database and create Django's default superuser and auth system
+If you haven't made an instance make one. Follow documentation for steps
 
-    $ python manage.py migrate
+Next check port
 
-2) Run Django
+`cylc get-suite-contact my.suite`
 
-    $ python manage.py runserver $IP:$PORT
-    
-## Configuration
+If port is different from the port in au.py, change it in the code
 
-You can configure your Python version and `PYTHONPATH` used in
-Cloud9 > Preferences > Project Settings > Language Support.
+`# TODO: make sure your port is correct (changes every time you run a suite)`
 
-## Support & Documentation
-
-Django docs can be found at https://www.djangoproject.com/
-
-You may also want to follow the Django tutorial to create your first application:
-https://docs.djangoproject.com/en/1.9/intro/tutorial01/
-
-Visit http://docs.c9.io for support, or to learn more about using Cloud9 IDE.
-To watch some training videos, visit http://www.youtube.com/user/c9ide
+`portNumber = <CHANGE>`
