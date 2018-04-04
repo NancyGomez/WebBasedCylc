@@ -9,13 +9,12 @@
 import requests
 import json
 from job import Job
-from os.path import expanduser
+from port import getPorts
 
-
-# TODO: change to your host
 hostName = 'bigbrotherx52-cylc-capstone-sp18-5942931'
-# TODO: make sure your port is correct (changes every time you run a suite)
-portNumber = 43019
+portList = getPorts()
+portNumber = portList[0]
+
 # TODO: make sure you change this to your path to your passphrase
 passphraseFile = "/home/ubuntu/cylc-run/my.suite/.service/passphrase"
 
@@ -24,6 +23,7 @@ passphraseFile = "/home/ubuntu/cylc-run/my.suite/.service/passphrase"
 with open(passphraseFile,'r') as f:
    	passphrase = f.readline()
 
+# url = "https://%s:%d/id/identify" % (hostName, portNumber)
 url = "https://%s:%d/get_suite_state_summary" % (hostName, portNumber)
 auth = requests.auth.HTTPDigestAuth('cylc', passphrase)
 session = requests.Session()
@@ -33,7 +33,8 @@ def parseJobs(suite_json):
     jobs = []
     index = 0
     for job, job_dict in suite_json[1].items():
-        jobs.append( Job(job_dict) )
+        jobs.append( Job(**job_dict) )
+        
         # jobs[index].printJob()
         index += 1
         # uncomment to view raw json

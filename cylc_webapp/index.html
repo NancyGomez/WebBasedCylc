@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Capstone</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body style="background-color:#DCDAD5;">
+
+<div class="navbar">
+  <a href="#home"><u>F</u>ile</a>
+  <a href="#news"><U>V</U>iew</a>
+  <a href="#news"><u>C</u>ontrol</a>
+  <a href="#news"><u>S</u>uite</a>
+  <a href="#news"><u>H</u>elp</a>
+</div>
+
+    <hr>
+    
+
+    <button class="navbar" style="float:left;margin-right:45px;margin-top: 0.0em;">
+        <img src="/Pictures/pause.png" height="25" width="25"  />
+        <p style="text-align:center;margin-top: 0.0em;"> Hold </p>
+    </button>
+    
+    <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/Pictures/1486348535-music-square-stop-play-pause_80450.png" height="25" width="25"   />
+        <p style="text-align:right;margin-top: 0.0em;"> Stop Suite </p>
+    </button>
+    
+    <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/Pictures/Simpleicons_Interface_redo-circular-arrow.svg.png" height="25" width="25"   />
+        <p style="text-align:right;margin-top: 0.0em;"> (Re-) connect </p>
+    </button>
+    
+    
+    <div class="navbar" style="float:left;margin-right:35px; align=bottom ; text-align:right;margin-top: 29px " > View 1: </div>
+    
+    <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/Pictures/026_-_health_care_healthcare_plus_cross_hospital-512.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Expand </p>
+    </button>
+    
+      <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/Pictures/5075.png" height="25" width="25"   />
+        <p style="text-align:right;margin-top: 0.0em;"> Collapse  </p>
+    </button>
+    
+     <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/Pictures/group-objects.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Group </p> 
+    </button>
+    <br><br><br><br>
+    
+
+ <hr>
+ 
+<span class="label" > task  </span>
+<span class="label"> state </span>
+<span class="label"> host  </span>
+<span class="label"> job system </span>
+<span class="label"> job ID  </span>
+<span class="label"> T-submit </span>
+<span class="label"> T-start  </span>
+<span class="label"> T-finish </span>
+<span class="label"> dT-Mean  </span>
+<span class="label"> latest message </span>
+<br>
+ 
+<table id="JobDisplay">
+    <!--set up header-->
+    {% for title in data %}
+        <!--this isn't the right way to do it, placeholder-->
+        <th> {{ title.key }} </th>
+    {% endfor %}
+    <!--fill rows/col-->
+    {% for item in data %}
+        <tr>
+            {% for value in item %}
+                <td>value</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+ 
+ <div style="width:747.5px;height:800px;border:1px solid #000; background-color:white;"></div>
+  
+
+
+
+
+
+</body>
+</html>
+
