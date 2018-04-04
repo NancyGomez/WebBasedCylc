@@ -1,4 +1,3 @@
-
 from os.path import expanduser
 import socket 
 import sys
@@ -28,33 +27,27 @@ def check_port(host, port, result=1):
             print data
         except urllib2.HTTPError, err:
             if err.code == 401:
-                print port, "good response"
+                # print port, "good response"
                 result = 0
                 return result
-            else:
-                print err
-                print port, "bad response"
+            # else:
+                # print err
+                # print port, "bad response"
         except urllib2.URLError, err:
-            print err
-            print port, "bad response"
-        
+            pass
+            # print err
+            # print port, "bad response"
     except Exception, err:
         print err
     return result
 
 
 for p in range(start_port, end_port + 1):
-        print p,
         response = check_port(host, p)
         if response == 0:
             open_ports.append(p)
         if not p == end_port:
             sys.stdout.write('\b' * len(str(p)))
-            
-                
-# This will print out how long it takes
-# ******************************************************
-
 
 def getPorts():
     print "\nScanning completed at %s" % (time.strftime("%I:%M:%S %p"))

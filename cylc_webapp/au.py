@@ -13,7 +13,7 @@ from port import getPorts
 
 hostName = 'bigbrotherx52-cylc-capstone-sp18-5942931'
 portList = getPorts()
-portNumber = portList[0]
+
 
 # TODO: make sure you change this to your path to your passphrase
 passphraseFile = "/home/ubuntu/cylc-run/my.suite/.service/passphrase"
@@ -24,9 +24,6 @@ with open(passphraseFile,'r') as f:
    	passphrase = f.readline()
 
 # url = "https://%s:%d/id/identify" % (hostName, portNumber)
-url = "https://%s:%d/get_suite_state_summary" % (hostName, portNumber)
-auth = requests.auth.HTTPDigestAuth('cylc', passphrase)
-session = requests.Session()
 
 
 def parseJobs(suite_json):
@@ -48,12 +45,20 @@ def _get_verify():
     return "/home/ubuntu/cylc-run/my.suite/.service/ssl.cert"
 
 def getResponse():
-    ret = session.get(
-                        url,
-                        auth=auth,
-                        verify=_get_verify()
-                     )
-    
-    response = ret.json()
-    jobs = parseJobs(response)
-    return jobs
+    # portNumber = portList[0]
+    auth = requests.auth.HTTPDigestAuth('cylc', passphrase)
+    session = requests.Session()
+    for portNumber in portList:
+        url = "https://%s:%d/get_suite_state_summary" % (hostName, portNumber)
+        try:
+            ret = session.get(
+                                url,
+                                auth=auth,
+                                verify=_get_verify()
+                             )
+        
+            response = ret.json()
+            jobs = parseJobs(response)
+            return jobs
+        except err: 
+            print err
