@@ -27,4 +27,4 @@ class Job:
         f = ("Name: {}\nState: {}\nHost: {}\nJob System: {}\nJob ID: {}\nLatest Message: {}"
             "\n-- Times --\nSubmitted: {}\nStarted: {}\nFinished: {}\ndT_mean: {}\n")
         return f.format(self.name, self.state, self.host, self.batch_sys_name, self.submit_method_id, self.latest_message,
-                        self.submitted_time_string, self.started_time_string, self.finished_time_string, self.mean_elapsed_time)
+                self.submitted_time_string, self.started_time_string, self.finished_time_string, self.mean_elapsed_time)
