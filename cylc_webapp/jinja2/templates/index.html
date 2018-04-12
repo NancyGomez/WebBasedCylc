@@ -57,19 +57,24 @@
 
  <hr>
  
-<span class="label" > task  </span>
-<span class="label"> state </span>
-<span class="label"> host  </span>
-<span class="label"> job system </span>
-<span class="label"> job ID  </span>
-<span class="label"> T-submit </span>
-<span class="label"> T-start  </span>
-<span class="label"> T-finish </span>
-<span class="label"> dT-Mean  </span>
-<span class="label"> latest message </span>
+<!--<span class="label" > task  </span>-->
+<!--<span class="label"> state </span>-->
+<!--<span class="label"> host  </span>-->
+<!--<span class="label"> job system </span>-->
+<!--<span class="label"> job ID  </span>-->
+<!--<span class="label"> T-submit </span>-->
+<!--<span class="label"> T-start  </span>-->
+<!--<span class="label"> T-finish </span>-->
+<!--<span class="label"> dT-Mean  </span>-->
+<!--<span class="label"> latest message </span>-->
 <br>
  
-<table id="JobDisplay">
+
+
+ 
+ <div style="width:747.5px;height:800px;border:1px solid #000; background-color:white;">
+     
+     <table id="JobDisplay">
     <!--set up header-->
     {% for title in data %}
         <!--this isn't the right way to do it, placeholder-->
@@ -79,13 +84,14 @@
     {% for item in data %}
         <tr>
             {% for value in item %}
-                <td>value</td>
+                <td>{{ value }}</td>
             {% endfor %}
         </tr>
     {% endfor %}
 </table>
- 
- <div style="width:747.5px;height:800px;border:1px solid #000; background-color:white;"></div>
+     
+     
+ </div>
   
 
 

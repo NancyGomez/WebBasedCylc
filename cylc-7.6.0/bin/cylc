@@ -52,6 +52,7 @@ print_version() {
 }
 
 init_cylc() {
+    
     set -eu
 
     CYLC_HOME_BIN=$(cd "$(dirname "$0")" && pwd -P)

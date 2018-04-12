@@ -20,6 +20,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^cylc_webapp/', include('cylc_webapp.urls')),
+    url(r'^', include('cylc_webapp.urls')),
+    url(r'^/cylc_webapp', include('cylc_webapp.urls')),
     url(r'^admin/', admin.site.urls),
 ]

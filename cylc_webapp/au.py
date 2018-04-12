@@ -60,5 +60,5 @@ def getResponse():
             response = ret.json()
             jobs = parseJobs(response)
             return jobs
-        except err: 
+        except Exception, err: 
             print err
