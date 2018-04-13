@@ -15,7 +15,27 @@ from job import Job
 def index(request):
     # jobs = getResponse()
     # return HttpResponse(jobs)
+    
+    print('here')
     data = getResponse()
     print(data)
+    dataset = []
+    
+    if(data == None):
+        d = Job()
+        d.junk_fill()
+        for i in range(10):
+            dataset.append(d.as_dict())
+            # print(d)
+    else:
+        for job in data:
+            print(job)
+            job = job.as_dict()
+            print(job)
+        dataset = data
+        
+    context = {
+        'data' : dataset,
+    }
     template = loader.get_template('index.html')
-    return HttpResponse(template.render())
+    return HttpResponse(template.render(context, request) )

@@ -23,21 +23,12 @@ passphraseFile = "/home/ubuntu/cylc-run/my.suite/.service/passphrase"
 with open(passphraseFile,'r') as f:
    	passphrase = f.readline()
 
-# url = "https://%s:%d/id/identify" % (hostName, portNumber)
-
-
 def parseJobs(suite_json):
     jobs = []
     index = 0
     for job, job_dict in suite_json[1].items():
         jobs.append( Job(**job_dict) )
-        
-        # jobs[index].printJob()
         index += 1
-        # uncomment to view raw json
-        # print "JOB ", job
-        # for k, v in value.items():
-        #     print k, v, '\n'
     return jobs
 
 def _get_verify():
