@@ -18,23 +18,22 @@ def index(request):
     
     print('here')
     data = getResponse()
-    print(data)
     dataset = []
+    dataOrder = ["name","latest_message","host","batch_sys_name","submit_method_id","submitted_time_string","started_time_string","finished_time_string","mean_elapsed_time"]
+      
     
     if(data == None):
         d = Job()
         d.junk_fill()
         for i in range(10):
             dataset.append(d.as_dict())
-            # print(d)
     else:
         for job in data:
-            print(job)
             job = job.as_dict()
-            print(job)
         dataset = data
         
     context = {
+        'dataOrderKey' : dataOrder,
         'data' : dataset,
     }
     template = loader.get_template('index.html')

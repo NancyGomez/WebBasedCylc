@@ -4,11 +4,12 @@ import sys
 import time
 import urllib
 import urllib2
+from au import hname
 
 
 start_port = 43001
 end_port = 43101
-host = "bigbrotherx52-cylc-capstone-sp18-5942931"
+host = hname
 #  127.0.0.1/8 ip for this 
 ip = socket.gethostbyname(host)
 open_ports = []

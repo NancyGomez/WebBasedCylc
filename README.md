@@ -1,10 +1,6 @@
 ##Necessary steps for this to run:
 
-**cylc** command must work (check to see it's in the path if not)
-
-`PATH=$PATH:/home/ubuntu/workspace/cylc/bin`
-
-Next, make sure your cylc instance is running by checking 
+Make sure your cylc instance is running by checking 
 
 `cylc scan -s`
 

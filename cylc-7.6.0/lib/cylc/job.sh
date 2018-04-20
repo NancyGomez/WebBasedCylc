@@ -130,14 +130,19 @@ __OUT__
     mkdir -p "${CYLC_SUITE_SHARE_DIR}" || true
     mkdir -p "$(dirname "${CYLC_TASK_WORK_DIR}")" || true
     mkdir -p "${CYLC_TASK_WORK_DIR}"
+    set +u    
     cd "${CYLC_TASK_WORK_DIR}"
+    set -u    
+
     # User Environment, Pre-Script, Script and Post-Script
     typeset func_name=
     for func_name in 'user_env' 'pre_script' 'script' 'post_script'; do
         cylc__job__run_inst_func "${func_name}"
     done
     # Empty work directory remove
+    set +u    
     cd
+    set -u    
     rmdir "${CYLC_TASK_WORK_DIR}" 2>'/dev/null' || true
     # Send task succeeded message
     wait "${CYLC_TASK_MESSAGE_STARTED_PID}" 2>'/dev/null' || true

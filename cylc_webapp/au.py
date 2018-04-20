@@ -8,15 +8,24 @@
 
 import requests
 import json
+import os
 from job import Job
+hname = 'bigbrotherx52-cylc-capstone-sp18-5942931'
+suite = "my.suite"
 from port import getPorts
 
-hostName = 'bigbrotherx52-cylc-capstone-sp18-5942931'
+# to be used to pull variable from opening page.
+
+hostName = hname
 portList = getPorts()
 
 
-# TODO: make sure you change this to your path to your passphrase
-passphraseFile = "/home/ubuntu/cylc-run/my.suite/.service/passphrase"
+newpath = r'cylc_webapp/cylc-variables' 
+if not os.path.exists(newpath):
+    os.makedirs(newpath)
+
+passphraseFile = "cylc_webapp/cylc-variables/"+ suite +"/passphrase"
+# passphraseFile = "~/home/ubuntu/cylc-run/my.suite/.service/passphrase"
 
 
 # read passphrase file
@@ -33,7 +42,10 @@ def parseJobs(suite_json):
 
 def _get_verify():
     """Return the server certificate if possible."""
-    return "/home/ubuntu/cylc-run/my.suite/.service/ssl.cert"
+    
+    return "cylc_webapp/cylc-variables/"+suite+"/ssl.cert"
+    # return "/home/ubuntu/cylc-run/my.suite/.service/ssl.cert"
+    # need to make it so that the user can add the ssl & passphrase to a suite folder.
 
 def getResponse():
     # portNumber = portList[0]
@@ -49,6 +61,7 @@ def getResponse():
                              )
         
             response = ret.json()
+            print(response)
             jobs = parseJobs(response)
             return jobs
         except Exception, err: 
