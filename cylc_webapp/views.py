@@ -11,7 +11,7 @@ from au import getResponse
 from job import Job
 
      
-
+# what calls this because that is where we set the page to reload consistently.
 def index(request):
     # jobs = getResponse()
     # return HttpResponse(jobs)

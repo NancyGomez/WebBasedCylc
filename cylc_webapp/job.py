@@ -9,6 +9,7 @@ class Job:
 
     def __init__(self, **kwargs):
         self.name = ""
+        self.label = ""
         self.state = ""
         self.host = "N/A"
         self.batch_sys_name = ""
@@ -25,6 +26,7 @@ class Job:
     
     def junk_fill(self):
         self.name = "temp"
+        self.label = "temp"
         self.state = "temp"
         self.host = "N/A"
         self.batch_sys_name = "temp"
@@ -36,7 +38,7 @@ class Job:
         self.latest_message = "Epson"
        
     def __str__(self):
-        f = ("Name: {}\nState: {}\nHost: {}\nJob System: {}\nJob ID: {}\nLatest Message: {}"
+        f = ("Name: {}\nLabel: {}\nState: {}\nHost: {}\nJob System: {}\nJob ID: {}\nLatest Message: {}"
             "\n-- Times --\nSubmitted: {}\nStarted: {}\nFinished: {}\ndT_mean: {}\n")
-        return f.format(self.name, self.state, self.host, self.batch_sys_name, self.submit_method_id, self.latest_message,
+        return f.format(self.name, self.label, self.state, self.host, self.batch_sys_name, self.submit_method_id, self.latest_message,
                 self.submitted_time_string, self.started_time_string, self.finished_time_string, self.mean_elapsed_time)
