@@ -5,7 +5,6 @@
     and certificate of the suite. Iorder to view these simply check your "concat"
     file within your suite folder. Might be something like cylc-run/my.suite/.services
 '''
-
 import requests
 import json
 import os

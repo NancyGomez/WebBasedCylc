@@ -13,15 +13,10 @@ from job import Job
      
 # what calls this because that is where we set the page to reload consistently.
 def index(request):
-    # jobs = getResponse()
-    # return HttpResponse(jobs)
-    
-    print('here')
     data = getResponse()
     dataset = []
     dataOrder = ["name","latest_message","host","batch_sys_name","submit_method_id","submitted_time_string","started_time_string","finished_time_string","mean_elapsed_time"]
-      
-    
+
     if(data == None):
         d = Job()
         d.junk_fill()
