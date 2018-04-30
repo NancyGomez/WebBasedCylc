@@ -37,8 +37,10 @@ class Job:
         self.mean_elapsed_time = "0"
         self.latest_message = "Epson"
        
+    def __repr__(self):
+        return self.name + self.label
+    
     def __str__(self):
         f = ("Name: {}\nLabel: {}\nState: {}\nHost: {}\nJob System: {}\nJob ID: {}\nLatest Message: {}"
             "\n-- Times --\nSubmitted: {}\nStarted: {}\nFinished: {}\ndT_mean: {}\n")
-        return f.format(self.name, self.label, self.state, self.host, self.batch_sys_name, self.submit_method_id, self.latest_message,
-                self.submitted_time_string, self.started_time_string, self.finished_time_string, self.mean_elapsed_time)
+        return f.format(self.name, self.label, self.state, self.host, self.batch_sys_name, self.submit_method_id, self.latest_message, self.submitted_time_string, self.started_time_string, self.finished_time_string, self.mean_elapsed_time)

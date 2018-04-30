@@ -9,9 +9,7 @@ import urllib2
 
 start_port = 43001
 end_port = 43101
-host = 'bigbrotherx52-cylc-capstone-sp18-5942931'
-#  127.0.0.1/8 ip for this 
-ip = socket.gethostbyname(host)
+
 open_ports = []
 starting_time = time.time()
 portNumbers = []
@@ -43,14 +41,14 @@ def check_port(host, port, result=1):
     return result
 
 
-for p in range(start_port, end_port + 1):
+def getPorts(host):
+    for p in range(start_port, end_port + 1):
         response = check_port(host, p)
         if response == 0:
             open_ports.append(p)
         if not p == end_port:
             sys.stdout.write('\b' * len(str(p)))
 
-def getPorts():
     print "\nScanning completed at %s" % (time.strftime("%I:%M:%S %p"))
     ending_time = time.time()
     total_time = ending_time - starting_time
