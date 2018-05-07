@@ -60,24 +60,26 @@ def getFamilyHierarchy(suite_json, cycles):
     for cycle, jobs in sorted(cycles.items()):
       # add a root cycle node to the dictionary 
       cycle_vals[cycle] = JobNode(cycle, Job(**{'label' : cycle, 'is_group' : True}))
+      
       # iterate through this cycle's jobs
       for job in jobs:
         # these values reset for each job
         order = ancestors[job.name]
         root = cycle_vals[cycle]
-        parent_name = root.id
+        parent_id = root.id
         
         # if the job has a family grouping / parent 
         if (len(order) > 2):
-          # iterate through its family in reverse (also remove first and last element)
+          
+          # iterate through its family in reverse (excluding first and last)
           for element in reversed(order[1:-1]):
             # for unique ids we need the name and it's parent's name 
-            group_id = element + parent_name
+            group_id = element + parent_id
             
             # create a new grouping if it doesn't already exist
             if group_id not in groupings:
               groupings[group_id] = JobNode(group_id, Job(**{'is_group' : True}), parent = root)
-           
+              
             # connect only if last item
             if (element == order[1]):
               JobNode(job.name + job.label, job, parent = groupings[group_id])
