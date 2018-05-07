@@ -46,22 +46,27 @@ def getFamilyHierarchy(suite_json, cycles):
     groupings = {}
     for cycle, jobs in sorted(cycles.items()):
       cycle_vals[cycle] = JobNode(cycle, Job(**{'label' : cycle}))
-      cycle_root = cycle_vals[cycle]
       
       for job in jobs:
         order = ancestors[job.name]
+        root = cycle_vals[cycle]
+        parent_name = root.name
         
-        # if the job has a family parent
+        # if the job has a family grouping
         if (len(order) > 2):
           for element in reversed(order[1:-1]):
-            if element + cycle_root.name not in groupings:
-              groupings[element + cycle_root.name] = JobNode(element, Job(), parent = cycle_root)
+            if element + parent_name not in groupings:
+              groupings[element + parent_name] = JobNode(element + parent_name, Job(), parent = root)
               
-            job = JobNode(job.name + job.label, job, parent = groupings[element + cycle_root.name])
-          
+            job = JobNode(job.name + job.label, job, parent = groupings[element + parent_name])
+            
+            # update parent for the next one
+            root = groupings[element + parent_name]
+            parent_name = root.name
+              
         # otherwise job just goes under cycle point
         else:
-          job = JobNode(job.name + job.label, job, parent = cycle_root)
+          job = JobNode(job.name + job.label, job, parent = root)
           
     return cycle_vals
 
