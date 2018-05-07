@@ -8,8 +8,10 @@
 import requests
 import json
 import os
-from job import Job
+from anytree import Node, RenderTree
+from job import Job, JobNode
 from port import getPorts
+from anytree import Node, RenderTree
 
 SUITE = "my.suite"
 HOST_NAME = 'bigbrotherx52-cylc-capstone-sp18-5942931'
@@ -35,19 +37,33 @@ def getCycleHierarchy(jobs):
             cycle_hierarchy[job.label].append(job)
         else:
             cycle_hierarchy[job.label] = [job]
-    print cycle_hierarchy
+    return cycle_hierarchy
             
     
-def getFamilyHierarchy(suite_json):
-    ancestors = suite_json["ancestors"]
-    ancestors_pruned = suite_json["ancestors_pruned"]
-    descendants = suite_json["descendants"]
-    
-    # TODO: need to parse them in a way where the family hierarchy makes sense
-    # import pprint
-    # pprint.pprint(ancestors)
-    # pprint.pprint(ancestors_pruned)
-    # pprint.pprint(descendants)
+def getFamilyHierarchy(suite_json, cycles):
+    ancestors = suite_json["ancestors_pruned"]
+    cycle_vals = {}
+    groupings = {}
+    for cycle, jobs in sorted(cycles.items()):
+      cycle_vals[cycle] = JobNode(cycle, Job(**{'label' : cycle}))
+      cycle_root = cycle_vals[cycle]
+      
+      for job in jobs:
+        order = ancestors[job.name]
+        
+        # if the job has a family parent
+        if (len(order) > 2):
+          for element in reversed(order[1:-1]):
+            if element + cycle_root.name not in groupings:
+              groupings[element + cycle_root.name] = JobNode(element, Job(), parent = cycle_root)
+              
+            job = JobNode(job.name + job.label, job, parent = groupings[element + cycle_root.name])
+          
+        # otherwise job just goes under cycle point
+        else:
+          job = JobNode(job.name + job.label, job, parent = cycle_root)
+          
+    return cycle_vals
 
 def parseJobs(suite_json):
     jobs = []
@@ -81,11 +97,15 @@ def getResponse():
         
             response = ret.json()
             jobs = parseJobs(response)
-            getFamilyHierarchy(response)
-            getCycleHierarchy(jobs)
+            cycles = getCycleHierarchy(jobs)
+            hierarchy = getFamilyHierarchy(response, cycles)
+            
+            for cycle_key, cycle_node in hierarchy.items():
+              for pre, fill, node in RenderTree(cycle_node):
+                print("%s%s" % (pre, node.name))
+            
             return jobs
         except Exception, err: 
-            # pass
             print err
             
-getResponse()
+# getResponse()
