@@ -6,7 +6,8 @@
 <meta charset="utf-8">
 <title>Capstone</title>
 
-<!--<link rel="stylesheet" type="text/css" href="/cylc_webapp/jinja2/static/styles.css">-->
+<link href="{{ STATICFILES_DIRS }}styles.css" rel="stylesheet" type="text/css" />
+<!--<link rel="stylesheet" type="text/css" href="/home/ubuntu/workspace/cylc_webapp/jinja2/static/styles.css">-->
 <style type="text/css">
     .navbar {
     overflow: hidden;
@@ -80,17 +81,17 @@ timer();
     
 
     <button class="navbar" style="float:left;margin-right:45px;margin-top: 0.0em;">
-        <img src="/Pictures/pause.png" height="25" width="25"  />
+        <img src="/cylc_webapp/jinja2/static/Pictures/pause.png" height="25" width="25"  />
         <p style="text-align:center;margin-top: 0.0em;"> Hold </p>
     </button>
     
     <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="/Pictures/1486348535-music-square-stop-play-pause_80450.png" height="25" width="25"   />
+        <img src="/cylc_webapp/jinja2/static/Pictures/1486348535-music-square-stop-play-pause_80450.png" height="25" width="25"   />
         <p style="text-align:right;margin-top: 0.0em;"> Stop Suite </p>
     </button>
     
     <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="/Pictures/Simpleicons_Interface_redo-circular-arrow.svg.png" height="25" width="25"   />
+        <img src="/cylc_webapp/jinja2/static/Pictures/Simpleicons_Interface_redo-circular-arrow.svg.png" height="25" width="25"   />
         <p style="text-align:right;margin-top: 0.0em;"> (Re-) connect </p>
     </button>
     
@@ -98,24 +99,70 @@ timer();
     <div class="navbar" style="float:left;margin-right:35px; align=bottom ; text-align:right;margin-top: 29px " > View 1: </div>
     
     <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="/Pictures/026_-_health_care_healthcare_plus_cross_hospital-512.png" height="25" width="25"  />
+        <img src="/cylc_webapp/jinja2/static/Pictures/026_-_health_care_healthcare_plus_cross_hospital-512.png" height="25" width="25"  />
         <p style="text-align:right;margin-top: 0.0em;"> Expand </p>
     </button>
     
       <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="/Pictures/5075.png" height="25" width="25"   />
+        <img src="/cylc_webapp/jinja2/static/Pictures/5075.png" height="25" width="25"   />
         <p style="text-align:right;margin-top: 0.0em;"> Collapse  </p>
     </button>
     
      <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="/Pictures/group-objects.png" height="25" width="25"  />
+        <img src="/cylc_webapp/jinja2/static/Pictures/group-objects.png" height="25" width="25"  />
         <p style="text-align:right;margin-top: 0.0em;"> Group </p> 
     </button>
+    
+       <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/cylc_webapp/jinja2/static/Pictures/Forward_2-512.png" height="25" width="25"  />
+        <p style="text-align:right ;margin-top: 0.0em; margin-right: 5.0em"> Layout  </p> 
+           </button>
+        
+        
+            <div class="navbar" style="float:left;margin-right:35px; align=bottom ; text-align:right;margin-top: 29px " > View 2: </div>
+        
+          <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/cylc_webapp/jinja2/static/Pictures/group-objects.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Group </p> 
+       </button>
+       
+       <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/cylc_webapp/jinja2/static/Pictures/ungroup-objects.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Ungroup </p> 
+       </button>
+       
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/cylc_webapp/jinja2/static/Pictures/40-512.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Transpose </p> 
+       </button>
+       
+          <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/cylc_webapp/jinja2/static/Pictures/5967-200.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Subgraphs </p> 
+       </button>
+       
+            <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/cylc_webapp/jinja2/static/Pictures/zoom-in-512.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Zoom In </p> 
+       </button>
+       
+       <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <img src="/cylc_webapp/jinja2/static/Pictures/4-512.png" height="25" width="25"  />
+        <p style="text-align:right;margin-top: 0.0em;"> Zoom Out </p> 
+       </button>
+    
+    
+    
+ 
+    
+ 
+    
+    
+    
     <br><br><br><br>
     
 
  <hr>
- 
 <!--<span class="label" > task  </span>-->
 <!--<span class="label"> state </span>-->
 <!--<span class="label"> host  </span>-->
@@ -141,6 +188,7 @@ timer();
     <!--this isn't the right way to do it, placeholder-->
     
     <th>name</th>
+    <th>label</th>
 	<th>state</th>
 	<th>host</th>
 	<th>latest_message</th>
@@ -156,6 +204,7 @@ timer();
 	<tr>
 		
 		<td>{{ item["name"] }}</td>
+		<td>{{ item["label"] }}</td>
 		<td>{{ item["state"] }}</td>
 		<td>{{ item["host"] }}</td>
 		<td>{{ item["latest_message"] }}</td>
@@ -182,3 +231,50 @@ timer();
 </body>
 </html>
 
+
+
+
+
+
+
+
+
+
+
+
+<!-
+
+<style>
+
+
+.square {
+  height: 10px;
+  width: 10px;
+}
+
+</style>
+<script>
+
+    if ( item["state"]  == failed) {
+    <div class="square" style="background-color: red"> </div>
+    }
+    if ( item["state"]  == running) {
+    <div class="square" style="background-color: green"> </div>
+    }
+    if ( item["state"]  == queued) {
+    <div class="square" style="background-color: yellow"> </div>
+    }
+    if ( item["state"]  == waiting) {
+    <div class="square" style="background-color: blue"> </div>
+    }
+    if ( item["state"]  == ready) {
+    <div class="square" style="background-color: brown"> </div>
+    }
+    if ( item["state"]  == held) {
+    <div class="square" style="background-color: pink"> </div>
+   
+    }
+}
+</script>
+
+-->
