@@ -19,6 +19,7 @@ class Job:
         self.finished_time_string = ""
         self.mean_elapsed_time = ""
         self.latest_message = ""
+        self.is_group = False
         self.__dict__.update(kwargs) 
     
     def as_dict(self):
@@ -36,20 +37,26 @@ class Job:
         self.finished_time_string = "0"
         self.mean_elapsed_time = "0"
         self.latest_message = "Epson"
+        self.is_group = False
        
     def __repr__(self):
         return self.name + self.label
     
     def __str__(self):
+      if (self.is_group):
+        return "Grouping\n"
+      else:
         f = ("Name: {}\nLabel: {}\nState: {}\nHost: {}\nJob System: {}\nJob ID: {}\nLatest Message: {}"
             "\n-- Times --\nSubmitted: {}\nStarted: {}\nFinished: {}\ndT_mean: {}\n")
         return f.format(self.name, self.label, self.state, self.host, self.batch_sys_name, self.submit_method_id, self.latest_message, self.submitted_time_string, self.started_time_string, self.finished_time_string, self.mean_elapsed_time)
         
-        
-        
 class JobNode(Job, NodeMixin):
-  def __init__(self, name, Job, parent = None):
+  def __init__(self, id, Job, parent = None):
     super(JobNode, self).__init__()
-    self.name = name
+    self.id = id
     self.job = Job
     self.parent = parent
+    
+  def __str__(self):
+    f = ("Id: {}, Job: {}\n")
+    return f.format(self.id, repr(self.job))
