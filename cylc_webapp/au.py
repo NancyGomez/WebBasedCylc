@@ -73,15 +73,18 @@ def getFamilyHierarchy(suite_json, cycles):
           for element in reversed(order[1:-1]):
             # for unique ids we need the name and it's parent's name 
             group_id = element + parent_name
+            
             # create a new grouping if it doesn't already exist
             if group_id not in groupings:
               groupings[group_id] = JobNode(group_id, Job(**{'is_group' : True}), parent = root)
+           
+            # connect only if last item
+            if (element == order[1]):
+              JobNode(job.name + job.label, job, parent = groupings[group_id])
             
-            # append job to its parent 
-            JobNode(job.name + job.label, job, parent = groupings[group_id])
             # update parent for the next one
             root = groupings[group_id]
-            parent_name = root.name
+            parent_id = root.id
               
         # otherwise job just goes under root cycle node
         else:
