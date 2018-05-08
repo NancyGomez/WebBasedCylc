@@ -25,6 +25,7 @@ SECRET_KEY = 'qrt=b=berv=rk5k8r83qyww*#7b-f)1p+8%t2bjqzg0ee5$d*c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#this will need to be changed if deployed elsewhere
 ALLOWED_HOSTS = [u'cylc-capstone-sp18-bigbrotherx52.c9users.io']
 
 
@@ -127,6 +128,7 @@ USE_TZ = True
 
 STATIC_URL = '/cylc_webapp/static/'
 
+#this must be modified for remote files and during production
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "cylc_webapp/static")
     ]

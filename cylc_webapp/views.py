@@ -20,7 +20,7 @@ def index(request):
     
 # what calls this because that is where we set the page to reload consistently.
 def webapp(request):
-    data, hierarchy = getResponse()
+    data = getResponse()
     dataset = []
     # dataOrder = sorted(hierarchy.keys())
     # if(hierarchy == None):

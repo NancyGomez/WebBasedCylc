@@ -143,7 +143,8 @@ def getResponse():
                 
             print "TYPE:", type(hierarchy)
             
-            return jobs, hierarchy
+            return jobs
+            # , hierarchy
         except Exception, err: 
             print err
             
