@@ -1,43 +1,27 @@
+HELLO
+got to /webapp
+
+
+
+
+make sure everything is documented
+push to git
+
+
+
+
 <!DOCTYPE html>
 
 <html lang="en-us">
 
 <head>
-<meta charset="utf-8">
-<title>Capstone</title>
-
-  
+    <meta charset="utf-8">
+    <title>Capstone</title>
+    
     <link href="{{ static('styles.css') }}" rel="stylesheet" type="text/css" />
- 
-
-<script type="text/javascript">
-var timer = function() {
-    setTimeout(function(){ window.location.reload(); }, 1500);
-};
-
-
-
-    if ( item["state"]  == failed) {
-    <div class="square" style="background-color: red"> </div>
-    }
-    if ( item["state"]  == running) {
-    <div class="square" style="background-color: green"> </div>
-    }
-    if ( item["state"]  == queued) {
-    <div class="square" style="background-color: yellow"> </div>
-    }
-    if ( item["state"]  == waiting) {
-    <div class="square" style="background-color: blue"> </div>
-    }
-    if ( item["state"]  == ready) {
-    <div class="square" style="background-color: brown"> </div>
-    }
-    if ( item["state"]  == held) {
-    <div class="square" style="background-color: pink"> </div>
-   
-    }
-timer();
-</script>
+    <!--<link rel="stylesheet" type="text/css" href="/home/ubuntu/workspace{{ static('styles.css') }}/styles.css">-->
+    
+    
 
 </head>
 <body style="background-color:#DCDAD5;">
@@ -51,7 +35,8 @@ timer();
 </div>
 
     <hr>
-  
+    
+
     <button class="navbar" style="float:left;margin-right:45px;margin-top: 0.0em;">
         <img src="{{ static('Pictures/pause.png') }}" height="25" width="25"  />
         <p style="text-align:center;margin-top: 0.0em;"> Hold </p>
@@ -125,6 +110,7 @@ timer();
     
     
     
+ 
     
  
     
@@ -150,6 +136,7 @@ timer();
 
 {# data[0] #} 
 {{ static('styles.css') }}
+
  <div style="height:800px;border:1px solid #000; background-color:white;">
      
      <table id="JobDisplay">
@@ -173,19 +160,7 @@ timer();
     <!--fill rows/col-->
     {% for item in data %}
 	<tr>
-		
-		<td>{{ item["name"] }}</td>
-		<td>{{ item["label"] }}</td>
-		<td>{{ item["state"] }}</td>
-		<td>{{ item["host"] }}</td>
-		<td>{{ item["latest_message"] }}</td>
-		<td>{{ item["batch_sys_name"] }}</td>
-		<td>{{ item["submit_method_id"] }}</td>
-		<td>{{ item["submitted_time_string"] }}</td>
-		<td>{{ item["started_time_string"] }}</td>
-		<td>{{ item["finished_time_string"] }}</td>
-		<td>{{ item["mean_elapsed_time"] }}</td>
-		
+
 		
 	</tr>
     {% endfor %}
@@ -207,19 +182,3 @@ timer();
 
 
 
-
-
-
-
-
-
-<!-
-
-<style>
-
-
-
-
-</style>
-
--->

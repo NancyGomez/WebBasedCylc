@@ -1,8 +1,7 @@
-
 .navbar {
     overflow: hidden;
     background-color:#DCDAD5;
-    font-family: Arial, Helvetica, sans-serif;
+   font-family: "Georgia", Times, serif;
 }
 hr { 
     display: block;
@@ -12,6 +11,7 @@ hr {
     margin-right: auto;
     border-style: inset;
     border-width: 2px;
+    font-family: "Georgia", Times, serif;
 } 
 
 .navbar a {
@@ -21,13 +21,14 @@ hr {
     text-align: center;
     padding: 10px 14px;
     text-decoration: none;
+    font-family: "Georgia", Times, serif;
 }
 
 
 .navbar a:hover, .dropdown:hover .dropbtn {
     background-color: black ;
     color: WHITE;
-    
+    font-family: "Georgia", Times, serif;
 }
 
 
@@ -37,6 +38,7 @@ hr {
 .vl {
     border-left: 6px solid green;
     height: 500px;
+    font-family: "Georgia", Times, serif;
 }
 
 .label {
@@ -44,6 +46,21 @@ hr {
     width: 600px;
     padding: 10px;
    border:solid 1px black;
+   font-family: "Georgia", Times, serif;
 
    
+}
+
+.pic1{
+      position: center ;
+    border: 3px solid #DCDAD5;
+    margin-left: 810px;
+    margin-top:-32px;
+
+    height:830px;
+    
+}
+.square {
+  height: 10px;
+  width: 10px;
 }
