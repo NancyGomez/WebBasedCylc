@@ -8,4 +8,4 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^webapp', views.webapp, name='webapp')
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)#this is for dev, should be changed for production

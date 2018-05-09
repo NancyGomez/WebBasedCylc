@@ -22,25 +22,6 @@ def index(request):
 def webapp(request):
     data = getResponse()
     dataset = []
-    # dataOrder = sorted(hierarchy.keys())
-    # if(hierarchy == None):
-    #     d = Job()
-    #     d.junk_fill()
-    #     for i in range(10):
-    #         dataset.append(d.as_dict())
-    # else:
-    #     for job in data:
-    #         job = job.as_dict()
-    #     dataset = data
-        
-    # context = {
-    #     'dataOrderKey' : dataOrder,
-    #     'data' : dataset,
-    # }
-    # template = loader.get_template('index.html')
-    # return HttpResponse(template.render(context, request) )
-    
-    
     dataOrder = ["name", "label", "latest_message","host","batch_sys_name","submit_method_id","submitted_time_string","started_time_string","finished_time_string","mean_elapsed_time"]
     if(data == None):
         d = Job()
@@ -54,7 +35,7 @@ def webapp(request):
         
     context = {
         'dataOrderKey' : dataOrder,
-        'data' : dataset,
+        'data' : dataset
     }
     template = loader.get_template('index.html')
     return HttpResponse(template.render(context, request) )

@@ -55,17 +55,17 @@ def getCycleHierarchy(jobs):
 '''
 def getFamilyHierarchy(suite_json, cycles):
     ancestors = suite_json["ancestors_pruned"]
-    cycle_vals = {}
+    cycle_trees = {}
     groupings = {}
     for cycle, jobs in sorted(cycles.items()):
       # add a root cycle node to the dictionary 
-      cycle_vals[cycle] = JobNode(cycle, Job(**{'label' : cycle, 'is_group' : True}))
+      cycle_trees[cycle] = JobNode(cycle, Job(**{'name': cycle, 'is_group' : True}))
       
       # iterate through this cycle's jobs
       for job in jobs:
         # these values reset for each job
         order = ancestors[job.name]
-        root = cycle_vals[cycle]
+        root = cycle_trees[cycle]
         parent_id = root.id
         
         # if the job has a family grouping / parent 
@@ -78,7 +78,7 @@ def getFamilyHierarchy(suite_json, cycles):
             
             # create a new grouping if it doesn't already exist
             if group_id not in groupings:
-              groupings[group_id] = JobNode(group_id, Job(**{'is_group' : True}), parent = root)
+              groupings[group_id] = JobNode(group_id, Job(**{'name': element, 'is_group' : True}), parent = root)
               
             # connect only if last item
             if (element == order[1]):
@@ -91,8 +91,20 @@ def getFamilyHierarchy(suite_json, cycles):
         # otherwise job just goes under root cycle node
         else:
           JobNode(job.name + job.label, job, parent = root)
+    
+        
+    hierarchy = []
+    for cycle_key, cycle_node in cycle_trees.items():
+      for pre, fill, node in RenderTree(cycle_node):
+          node.job.indent = node.depth
+          hierarchy.append(node.job)
+          print("%s%s %d" % (pre, node.id, node.job.indent))
           
-    return cycle_vals
+    for item in hierarchy:
+      print '    ' * item.indent + repr(item)
+      
+    return hierarchy
+    
 '''
     Returns an array of Job objects
     @param {JSON} suite_json, The returned JSON from the request to 'get_latest_state'
@@ -136,15 +148,8 @@ def getResponse():
             jobs = parseJobs(response)
             cycles = getCycleHierarchy(jobs)
             hierarchy = getFamilyHierarchy(response, cycles)
-            
-            for cycle_key, cycle_node in hierarchy.items():
-              for pre, fill, node in RenderTree(cycle_node):
-                print("%s%s" % (pre, node.id))
-                
             print "TYPE:", type(hierarchy)
-            
-            return jobs
-            # , hierarchy
+            return hierarchy
         except Exception, err: 
             print err
             

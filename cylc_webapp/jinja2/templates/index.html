@@ -14,32 +14,12 @@
 var timer = function() {
     setTimeout(function(){ window.location.reload(); }, 1500);
 };
-
-
-
-    if ( item["state"]  == failed) {
-    <div class="square" style="background-color: red"> </div>
-    }
-    if ( item["state"]  == running) {
-    <div class="square" style="background-color: green"> </div>
-    }
-    if ( item["state"]  == queued) {
-    <div class="square" style="background-color: yellow"> </div>
-    }
-    if ( item["state"]  == waiting) {
-    <div class="square" style="background-color: blue"> </div>
-    }
-    if ( item["state"]  == ready) {
-    <div class="square" style="background-color: brown"> </div>
-    }
-    if ( item["state"]  == held) {
-    <div class="square" style="background-color: pink"> </div>
-   
-    }
-timer();
+// timer();
 </script>
 
 </head>
+
+
 <body style="background-color:#DCDAD5;">
 
 <div class="navbar">
@@ -52,77 +32,77 @@ timer();
 
     <hr>
   
-    <button class="navbar" style="float:left;margin-right:45px;margin-top: 0.0em;">
-        <img src="{{ static('Pictures/pause.png') }}" height="25" width="25"  />
-        <p style="text-align:center;margin-top: 0.0em;"> Hold </p>
-    </button>
-    
-    <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/1486348535-music-square-stop-play-pause_80450.png') }}" height="25" width="25"   />
-        <p style="text-align:right;margin-top: 0.0em;"> Stop Suite </p>
-    </button>
-    
-    <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/Simpleicons_Interface_redo-circular-arrow.svg.png') }}" height="25" width="25"   />
-        <p style="text-align:right;margin-top: 0.0em;"> (Re-) connect </p>
-    </button>
-    
-    
-    <div class="navbar" style="float:left;margin-right:35px; align=bottom ; text-align:right;margin-top: 29px " > View 1: </div>
-    
-    <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/026_-_health_care_healthcare_plus_cross_hospital-512.png') }}" height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Expand </p>
-    </button>
-    
-      <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/5075.png') }}" height="25" width="25"   />
-        <p style="text-align:right;margin-top: 0.0em;"> Collapse  </p>
-    </button>
-    
-     <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/group-objects.png') }}" height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Group </p> 
-    </button>
-    
-       <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/Forward_2-512.png') }}" height="25" width="25"  />
-        <p style="text-align:right ;margin-top: 0.0em; margin-right: 5.0em"> Layout  </p> 
-           </button>
+        <button class="navbar" style="float:left;margin-right:45px;margin-top: 0.0em;">
+            <img src="{{ static('Pictures/pause.png') }}" height="25" width="25"  />
+            <p style="text-align:center;margin-top: 0.0em;"> Hold </p>
+        </button>
         
-        
-            <div class="navbar" style="float:left;margin-right:35px; align=bottom ; text-align:right;margin-top: 29px " > View 2: </div>
-        
-          <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/group-objects.png') }} " height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Group </p> 
-       </button>
-       
-       <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/ungroup-objects.png') }}" height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Ungroup </p> 
-       </button>
-       
         <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/40-512.png') }}" height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Transpose </p> 
-       </button>
-       
-          <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/5967-200.png') }}" height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Subgraphs </p> 
-       </button>
-       
-            <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/zoom-in-512.png') }}" height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Zoom In </p> 
-       </button>
-       
-       <button class="navbar" style="float:left;margin-right:35px; align=right">
-        <img src="{{ static('Pictures/4-512.png') }}" height="25" width="25"  />
-        <p style="text-align:right;margin-top: 0.0em;"> Zoom Out </p> 
-       </button>
-    
+            <img src="{{ static('Pictures/1486348535-music-square-stop-play-pause_80450.png') }}" height="25" width="25"   />
+            <p style="text-align:right;margin-top: 0.0em;"> Stop Suite </p>
+        </button>
+        
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/Simpleicons_Interface_redo-circular-arrow.svg.png') }}" height="25" width="25"   />
+            <p style="text-align:right;margin-top: 0.0em;"> (Re-) connect </p>
+        </button>
+        
+        
+    <div class="navbar" style="float:left;margin-right:35px; align=bottom ; text-align:right;margin-top: 29px " > View 1: </div>
+        
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/026_-_health_care_healthcare_plus_cross_hospital-512.png') }}" height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Expand </p>
+        </button>
+        
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/5075.png') }}" height="25" width="25"   />
+            <p style="text-align:right;margin-top: 0.0em;"> Collapse  </p>
+        </button>
+        
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/group-objects.png') }}" height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Group </p> 
+        </button>
+        
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/Forward_2-512.png') }}" height="25" width="25"  />
+            <p style="text-align:right ;margin-top: 0.0em; margin-right: 5.0em"> Layout  </p> 
+        </button>
+            
+            
+    <div class="navbar" style="float:left;margin-right:35px; align=bottom ; text-align:right;margin-top: 29px " > View 2: </div>
+            
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/group-objects.png') }} " height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Group </p> 
+        </button>
+           
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/ungroup-objects.png') }}" height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Ungroup </p> 
+        </button>
+           
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/40-512.png') }}" height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Transpose </p> 
+        </button>
+           
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/5967-200.png') }}" height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Subgraphs </p> 
+        </button>
+           
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/zoom-in-512.png') }}" height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Zoom In </p> 
+        </button>
+           
+        <button class="navbar" style="float:left;margin-right:35px; align=right">
+            <img src="{{ static('Pictures/4-512.png') }}" height="25" width="25"  />
+            <p style="text-align:right;margin-top: 0.0em;"> Zoom Out </p> 
+        </button>
+        
     
     
     
@@ -146,80 +126,77 @@ timer();
 <!--<span class="label"> latest message </span>-->
 <br>
  
-
-
-{# data[0] #} 
-{{ static('styles.css') }}
- <div style="height:800px;border:1px solid #000; background-color:white;">
+<div style="height:800px;border:1px solid #000; background-color:white;">
      
-     <table id="JobDisplay">
+    <table id="JobDisplay">
 
-    <!--set up header-->
-    
-    <!--this isn't the right way to do it, placeholder-->
-    
-    <th>name</th>
-    <th>label</th>
-	<th>state</th>
-	<th>host</th>
-	<th>latest_message</th>
-	<th>batch_sys_name</th>
-	<th>submit_method_id</th>
-	<th>submitted_time_string</th>
-	<th>started_time_string</th>
-	<th>finished_time_string</th>
-	<th>mean_elapsed_time</th>
+        <!--set up header-->
+        
+        <!--this isn't the right way to do it, placeholder-->
+        
+        <th>task</th>
+        <th>label</th>
+    	<th>state</th>
+    	<th>host</th>
+    	<th>latest_message</th>
+    	<th>batch_sys_name</th>
+    	<th>submit_method_id</th>
+    	<th>submitted_time_string</th>
+    	<th>started_time_string</th>
+    	<th>finished_time_string</th>
+    	<th>mean_elapsed_time</th>
+    	
+        <!--fill rows/col-->
+        {% for item in data %}
+    	<tr>
+    		<td>
+    		    <!--TODO: display "expanded" arrow for non cycle point groups-->
+    		    <!--simply check to see if is_group is True and indent != 0-->
+    		    
+    		    <!--TODO: cased for running / runahead states-->
+    		    
+    		    {% if item["state"] == "succeeded" %}
+    		        <div class="square" style="background-color: green"> </div>
+    		    {% elif item["state"] == "queued" %}
+    		        <div class="square" style="background-color: yellow"> </div>
+    		    {% elif item["state"] == "waiting" %}
+    		        <div class="square" style="background-color: blue"> </div>
+    		    {% elif item["state"] == "ready" %}
+    		        <div class="square" style="background-color: brown"> </div>
+    		    {% elif item["state"] == "held" %}
+    		        <div class="square" style="background-color: pink"> </div>
+    		    {% elif item["state"] == "failed" %}
+    		        <div class="square" style="background-color: red"> </div>
+    		    {% else %}
+    		        <!--TODO: need to make this display the color of the status of the whole group-->
+    		        <div class="square" style="background-color: white; border: 1px solid black"> </div>
+    		    {% endif %}
+    		    
+    		    {% for i in range(item['indent']) %}    
+    		        &emsp;&emsp;
+    		    {% endfor %}
+    		    
+                {{ item["name"] }}
+    		    
+    		</td>
+    		<td>{{ item["label"] }}</td>
+    		<td>{{ item["state"] }}</td>
+    		<td>{{ item["host"] }}</td>
+    		<td>{{ item["latest_message"] }}</td>
+    		<td>{{ item["batch_sys_name"] }}</td>
+    		<td>{{ item["submit_method_id"] }}</td>
+    		<td>{{ item["submitted_time_string"] }}</td>
+    		<td>{{ item["started_time_string"] }}</td>
+    		<td>{{ item["finished_time_string"] }}</td>
+    		<td>{{ item["mean_elapsed_time"] }}</td>
+
 	
-    <!--fill rows/col-->
-    {% for item in data %}
-	<tr>
-		
-		<td>{{ item["name"] }}</td>
-		<td>{{ item["label"] }}</td>
-		<td>{{ item["state"] }}</td>
-		<td>{{ item["host"] }}</td>
-		<td>{{ item["latest_message"] }}</td>
-		<td>{{ item["batch_sys_name"] }}</td>
-		<td>{{ item["submit_method_id"] }}</td>
-		<td>{{ item["submitted_time_string"] }}</td>
-		<td>{{ item["started_time_string"] }}</td>
-		<td>{{ item["finished_time_string"] }}</td>
-		<td>{{ item["mean_elapsed_time"] }}</td>
-		
-		
-	</tr>
-    {% endfor %}
-</table>
+    	</tr>
+        {% endfor %}
+    </table>
      
      
  </div>
   
-
-
-
-
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-<!-
-
-<style>
-
-
-
-
-</style>
-
--->

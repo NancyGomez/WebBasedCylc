@@ -6,12 +6,12 @@ from django.db import models
 # Create your models here.
 
 # (Nancy) TODO:  Create Job class
-class Connection_Data(models.Model):
-    host = models.CharField(max_length=100)
-    port = models.IntegerField()
-    cert = models.CharField(max_length=256) #this might not be big enough?
-    p_phrase = models.CharField(max_length=256)
-    suite_name = models.CharField(max_legth=256)
+# class Connection_Data(models.Model):
+    # host = models.CharField(max_length=100)
+    # port = models.IntegerField()
+    # cert = models.CharField(max_length=256) #this might not be big enough?
+    # p_phrase = models.CharField(max_length=256)
+    # suite_name = models.CharField(max_legth=256)
 
 # class Job(models.Model):
 #     name = models.CharField(max_length=50)
