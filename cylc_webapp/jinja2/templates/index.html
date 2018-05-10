@@ -10,12 +10,20 @@
     <link href="{{ static('styles.css') }}" rel="stylesheet" type="text/css" />
  
 
-<script type="text/javascript">
-var timer = function() {
-    setTimeout(function(){ window.location.reload(); }, 1500);
-};
-// timer();
-</script>
+<script src="https://code.jquery.com/jquery-latest.js"> </script>
+<script>
+    $(document).ready(function() {
+        refreshData();
+    });
+    
+    function refreshData() {
+        var url = 'webapp'; 
+        $('#refreshWrapper').load(url + ' #refreshableData', function(){
+            setTimeout(refreshData, 1000);
+        }); 
+    }
+</script> 
+
 
 </head>
 
@@ -42,7 +50,7 @@ var timer = function() {
             <p style="text-align:right;margin-top: 0.0em;"> Stop Suite </p>
         </button>
         
-        <button class="navbar" style="float:left;margin-right:35px; align=right">
+        <button id="refresh" class="navbar" style="float:left;margin-right:35px; align=right">
             <img src="{{ static('Pictures/Simpleicons_Interface_redo-circular-arrow.svg.png') }}" height="25" width="25"   />
             <p style="text-align:right;margin-top: 0.0em;"> (Re-) connect </p>
         </button>
@@ -102,99 +110,84 @@ var timer = function() {
             <img src="{{ static('Pictures/4-512.png') }}" height="25" width="25"  />
             <p style="text-align:right;margin-top: 0.0em;"> Zoom Out </p> 
         </button>
-        
-    
-    
-    
- 
-    
-    
-    
     <br><br><br><br>
-    
-
- <hr>
-<!--<span class="label" > task  </span>-->
-<!--<span class="label"> state </span>-->
-<!--<span class="label"> host  </span>-->
-<!--<span class="label"> job system </span>-->
-<!--<span class="label"> job ID  </span>-->
-<!--<span class="label"> T-submit </span>-->
-<!--<span class="label"> T-start  </span>-->
-<!--<span class="label"> T-finish </span>-->
-<!--<span class="label"> dT-Mean  </span>-->
-<!--<span class="label"> latest message </span>-->
+    <hr>
 <br>
- 
+
 <div style="height:800px;border:1px solid #000; background-color:white;">
-     
-    <table id="JobDisplay">
-
-        <!--set up header-->
-        
-        <!--this isn't the right way to do it, placeholder-->
-        
-        <th>task</th>
-        <th>label</th>
-    	<th>state</th>
-    	<th>host</th>
-    	<th>latest_message</th>
-    	<th>batch_sys_name</th>
-    	<th>submit_method_id</th>
-    	<th>submitted_time_string</th>
-    	<th>started_time_string</th>
-    	<th>finished_time_string</th>
-    	<th>mean_elapsed_time</th>
+    
+    
+<div id="refreshWrapper">
+    <div id = "refreshableData">
+        <table id="JobDisplay">
+    
+            <!--set up header-->
+            
+            <!--this isn't the right way to do it, placeholder-->
+            
+            <th>task</th>
+            <th>label</th>
+        	<th>state</th>
+        	<th>host</th>
+        	<th>latest message</th>
+        	<th>job system</th>
+        	<th>job ID</th>
+        	<th>T-submit</th>
+        	<th>T-start</th>
+        	<th>T-finish</th>
+        	<th>dT-mean</th>
+        	
+            <!--fill rows/col-->
+            <!--TODO: check au.py and figure out how to give the data SORTED-->
+            {% for item in data %}
+        	<tr>
+        		<td>
+        		    <!--TODO: display "expanded" arrow for non cycle point groups-->
+        		    <!--simply check to see if is_group is True and indent != 0-->
+        		    
+        		    <!--TODO: cased for running / runahead states-->
+        		    
+        		    {% if item["state"] == "succeeded" %}
+        		        <div class="square" style="background-color: green"> </div>
+        		    {% elif item["state"] == "queued" %}
+        		        <div class="square" style="background-color: yellow"> </div>
+        		    {% elif item["state"] == "waiting" %}
+        		        <div class="square" style="background-color: blue"> </div>
+        		    {% elif item["state"] == "ready" %}
+        		        <div class="square" style="background-color: brown"> </div>
+        		    {% elif item["state"] == "held" %}
+        		        <div class="square" style="background-color: pink"> </div>
+        		    {% elif item["state"] == "failed" %}
+        		        <div class="square" style="background-color: red"> </div>
+        		    {% else %}
+        		        <!--TODO: need to make this display the color of the status of the whole group-->
+        		        <div class="square" style="background-color: white; border: 1px solid black"> </div>
+        		    {% endif %}
+        		    
+        		    {% for i in range(item['indent']) %}    
+        		        &emsp;&emsp;
+        		    {% endfor %}
+        		    
+                    {{ item["name"] }}
+        		    
+        		</td>
+        		<td>{{ item["label"] }}</td>
+        		<td>{{ item["state"] }}</td>
+        		<td>{{ item["host"] }}</td>
+        		<td>{{ item["latest_message"] }}</td>
+        		<td>{{ item["batch_sys_name"] }}</td>
+        		<td>{{ item["submit_method_id"] }}</td>
+        		<td>{{ item["submitted_time_string"] }}</td>
+        		<td>{{ item["started_time_string"] }}</td>
+        		<td>{{ item["finished_time_string"] }}</td>
+        		<td>{{ item["mean_elapsed_time"] }}</td>
+    
     	
-        <!--fill rows/col-->
-        {% for item in data %}
-    	<tr>
-    		<td>
-    		    <!--TODO: display "expanded" arrow for non cycle point groups-->
-    		    <!--simply check to see if is_group is True and indent != 0-->
-    		    
-    		    <!--TODO: cased for running / runahead states-->
-    		    
-    		    {% if item["state"] == "succeeded" %}
-    		        <div class="square" style="background-color: green"> </div>
-    		    {% elif item["state"] == "queued" %}
-    		        <div class="square" style="background-color: yellow"> </div>
-    		    {% elif item["state"] == "waiting" %}
-    		        <div class="square" style="background-color: blue"> </div>
-    		    {% elif item["state"] == "ready" %}
-    		        <div class="square" style="background-color: brown"> </div>
-    		    {% elif item["state"] == "held" %}
-    		        <div class="square" style="background-color: pink"> </div>
-    		    {% elif item["state"] == "failed" %}
-    		        <div class="square" style="background-color: red"> </div>
-    		    {% else %}
-    		        <!--TODO: need to make this display the color of the status of the whole group-->
-    		        <div class="square" style="background-color: white; border: 1px solid black"> </div>
-    		    {% endif %}
-    		    
-    		    {% for i in range(item['indent']) %}    
-    		        &emsp;&emsp;
-    		    {% endfor %}
-    		    
-                {{ item["name"] }}
-    		    
-    		</td>
-    		<td>{{ item["label"] }}</td>
-    		<td>{{ item["state"] }}</td>
-    		<td>{{ item["host"] }}</td>
-    		<td>{{ item["latest_message"] }}</td>
-    		<td>{{ item["batch_sys_name"] }}</td>
-    		<td>{{ item["submit_method_id"] }}</td>
-    		<td>{{ item["submitted_time_string"] }}</td>
-    		<td>{{ item["started_time_string"] }}</td>
-    		<td>{{ item["finished_time_string"] }}</td>
-    		<td>{{ item["mean_elapsed_time"] }}</td>
-
-	
-    	</tr>
-        {% endfor %}
-    </table>
-     
+        	</tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>     
      
  </div>
   

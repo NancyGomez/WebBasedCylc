@@ -49,9 +49,9 @@ def getCycleHierarchy(jobs):
             
 
 '''
-    Returns a dictionary with string keys and JobNode values (trees)
+    Returns an array of the jobs already in display order
     @param {JSON} suite_json, The returned JSON from the request to 'get_latest_state'
-    @param {dict} cycles The, cycle hierarchy for the jobs
+    @param {dict} cycles, The cycle hierarchy for the jobs
 '''
 def getFamilyHierarchy(suite_json, cycles):
     ancestors = suite_json["ancestors_pruned"]
