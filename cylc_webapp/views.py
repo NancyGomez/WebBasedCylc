@@ -7,13 +7,13 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 
-from au import getResponse
+from au import getResponse, getSuiteName
 from job import Job
 
   
   
 def index(request):
-    template = loader.get_template('splash.html')
+    template = loader.get_template('register.html')
     
     return HttpResponse(template.render())
     
@@ -21,6 +21,7 @@ def index(request):
 # what calls this because that is where we set the page to reload consistently.
 def webapp(request):
     data = getResponse()
+    suite = getSuiteName()
     dataset = []
     dataOrder = ["name", "label", "latest_message","host","batch_sys_name","submit_method_id","submitted_time_string","started_time_string","finished_time_string","mean_elapsed_time"]
     if(data == None):
@@ -35,7 +36,8 @@ def webapp(request):
         
     context = {
         'dataOrderKey' : dataOrder,
-        'data' : dataset
+        'data' : dataset,
+        'suite' : suite
     }
-    template = loader.get_template('index.html')
+    template = loader.get_template('suite_view.html')
     return HttpResponse(template.render(context, request) )

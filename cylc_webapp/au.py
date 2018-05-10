@@ -11,13 +11,14 @@ import os
 from anytree import Node, RenderTree
 from job import Job, JobNode
 from port import getPorts
-from anytree import Node, RenderTree
 
 SUITE = "my.suite"
 HOST_NAME = 'bigbrotherx52-cylc-capstone-sp18-5942931'
 PORT_LIST = getPorts(HOST_NAME)
 newpath = r'cylc_webapp/cylc-variables' 
 
+def getSuiteName():
+    return SUITE
 
 '''
     Returns the passphrase as read from the file saved in the '.service/passphrase'
