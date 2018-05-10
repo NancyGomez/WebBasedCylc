@@ -18,7 +18,7 @@
             });
             
             function refreshData() {
-                var url = 'webapp'; 
+                var url = 'suite_view'; 
                 $('#refreshWrapper').load(url + ' #refreshableData', function(){
                     setTimeout(refreshData, 1000);
                 }); 
