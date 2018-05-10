@@ -12,14 +12,15 @@ from job import Job
 
   
   
-def index(request):
+def register(request):
     template = loader.get_template('register.html')
-    
+    return HttpResponse(template.render())
+
+def suites(request):
+    template = loader.get_template('suites.html')
     return HttpResponse(template.render())
     
-    
-# what calls this because that is where we set the page to reload consistently.
-def webapp(request):
+def suite_view(request):
     data = getResponse()
     suite = getSuiteName()
     dataset = []
