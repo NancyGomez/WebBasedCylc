@@ -27,7 +27,6 @@ def suite_view(request):
     dataOrder = ["name", "label", "latest_message","host","batch_sys_name","submit_method_id","submitted_time_string","started_time_string","finished_time_string","mean_elapsed_time"]
     if(data == None):
         d = Job()
-        d.junk_fill()
         for i in range(10):
             dataset.append(d.as_dict())
     else:

@@ -4,7 +4,6 @@ import sys
 import time
 import urllib
 import urllib2
-# from au import hname
 
 
 start_port = 43001

@@ -1,13 +1,14 @@
 '''
+    author: Nancy Gomez
     FILE: au.py
     PURPOSE: establish secure connection to cylc running instance
     PRECONDITIONS: A running instance of CYLC, the hostname, port number, passphrase,
     and certificate of the suite. Iorder to view these simply check your "concat"
     file within your suite folder. Might be something like cylc-run/my.suite/.services
 '''
-import requests
-import json
 import os
+import json
+import requests
 from anytree import Node, RenderTree
 from job import Job, JobNode
 from port import getPorts
@@ -15,7 +16,6 @@ from port import getPorts
 SUITE = "nrl.sample"
 HOST_NAME = 'bigbrotherx52-cylc-capstone-sp18-5942931'
 PORT_LIST = getPorts(HOST_NAME)
-newpath = r'cylc_webapp/cylc-variables' 
 
 def getSuiteName():
     return SUITE
@@ -34,20 +34,6 @@ def getPassphrase(suite):
     with open(passphrase_file,'r') as f:
        	passphrase = f.readline()
     return passphrase
-
-'''
-    Returns a dictionary of string keys and Job Array values
-    @param {[Job]} jobs, A list of Jobs
-'''  
-def getCycleHierarchy(jobs):
-    cycle_hierarchy = {}
-    for job in jobs:
-        if cycle_hierarchy.has_key(job.label):
-            cycle_hierarchy[job.label].append(job)
-        else:
-            cycle_hierarchy[job.label] = [job]
-    return cycle_hierarchy
-            
 
 '''
     Returns an array of the jobs already in display order
@@ -93,7 +79,8 @@ def getFamilyHierarchy(suite_json, cycles):
         else:
           JobNode(job.name + job.label, job, parent = root)
     
-        
+    # TODO: figure out how to traverse tree in jinja2 instead of having to put tree
+    # into another array to increase efficiency
     hierarchy = []
     for cycle_key, cycle_node in cycle_trees.items():
       for pre, fill, node in RenderTree(cycle_node):
@@ -104,18 +91,23 @@ def getFamilyHierarchy(suite_json, cycles):
     # for item in hierarchy:
     #   print '    ' * item.indent + repr(item)
     return hierarchy
-    
+
 '''
-    Returns an array of Job objects
+    Returns a dictionary of string keys and Job Array values
     @param {JSON} suite_json, The returned JSON from the request to 'get_latest_state'
 '''
 def parseJobs(suite_json):
-    jobs = []
+    cycle_hierarchy = {}
     index = 0
     for job, job_dict in suite_json["summary"][1].items():
-        jobs.append( Job(**job_dict) )
+        new_job = Job(**job_dict)
+        # jobs.append(new_job)
+        if cycle_hierarchy.has_key(new_job.label):
+            cycle_hierarchy[new_job.label].append(new_job)
+        else:
+            cycle_hierarchy[new_job.label] = [new_job]
         index += 1
-    return jobs
+    return cycle_hierarchy
 
 '''
     Returns the path to the signed server certificate
@@ -145,11 +137,8 @@ def getResponse():
                              )
         
             response = ret.json()
-            jobs = parseJobs(response)
-            cycles = getCycleHierarchy(jobs)
+            cycles = parseJobs(response)
             hierarchy = getFamilyHierarchy(response, cycles)
             return hierarchy
         except Exception, err: 
             print err
-            
-# getResponse()
