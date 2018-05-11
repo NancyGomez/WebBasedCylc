@@ -12,7 +12,7 @@ from anytree import Node, RenderTree
 from job import Job, JobNode
 from port import getPorts
 
-SUITE = "my.suite"
+SUITE = "nrl.sample"
 HOST_NAME = 'bigbrotherx52-cylc-capstone-sp18-5942931'
 PORT_LIST = getPorts(HOST_NAME)
 newpath = r'cylc_webapp/cylc-variables' 
@@ -99,11 +99,10 @@ def getFamilyHierarchy(suite_json, cycles):
       for pre, fill, node in RenderTree(cycle_node):
           node.job.indent = node.depth
           hierarchy.append(node.job)
-          print("%s%s %d" % (pre, node.id, node.job.indent))
-          
-    for item in hierarchy:
-      print '    ' * item.indent + repr(item)
-      
+        #   print("%s%s %d" % (pre, node.job.own_id, node.job.indent))
+        
+    # for item in hierarchy:
+    #   print '    ' * item.indent + repr(item)
     return hierarchy
     
 '''
@@ -149,7 +148,6 @@ def getResponse():
             jobs = parseJobs(response)
             cycles = getCycleHierarchy(jobs)
             hierarchy = getFamilyHierarchy(response, cycles)
-            print "TYPE:", type(hierarchy)
             return hierarchy
         except Exception, err: 
             print err

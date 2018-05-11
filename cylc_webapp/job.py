@@ -19,8 +19,12 @@ class Job:
         self.finished_time_string = "*"
         self.mean_elapsed_time = "*"
         self.latest_message = "*"
+        
         self.is_group = False
         self.indent = 0
+        self.parent_id = ""
+        self.own_id = ""
+        
         self.__dict__.update(kwargs) 
     
     def as_dict(self):
@@ -38,14 +42,17 @@ class Job:
         self.finished_time_string = "0"
         self.mean_elapsed_time = "0"
         self.latest_message = "Epson"
+        
         self.indent = 0
+        self.parent_id = ""
+        self.own_id = ""
         self.is_group = False
        
     def __repr__(self):
       if (self.is_group):
-        return self.name
+        return self.own_id
       else:
-        return self.name + self.label
+        return self.own_id + self.label
     
     def __str__(self):
       if (self.is_group):
@@ -59,8 +66,12 @@ class JobNode(Job, NodeMixin):
   def __init__(self, id, Job, parent = None):
     super(JobNode, self).__init__()
     self.id = id
-    self.job = Job
     self.parent = parent
+    self.job = Job
+    
+    self.job.own_id = id
+    if (parent is not None):
+      self.job.parent_id = parent.id
     
   def __str__(self):
     if (self.is_group):
