@@ -13,10 +13,24 @@
         
         <script src="https://code.jquery.com/jquery-latest.js"> </script>
         <script>
+            // regex plugin
+            jQuery.expr[':'].regex = function(elem, index, match) {
+                var matchParams = match[3].split(','),
+                    validLabels = /^(data|css):/,
+                    attr = {
+                        method: matchParams[0].match(validLabels) ? 
+                                    matchParams[0].split(':')[0] : 'attr',
+                        property: matchParams.shift().replace(validLabels,'')
+                    },
+                    regexFlags = 'ig',
+                    regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
+                return regex.test(jQuery(elem)[attr.method](attr.property));
+            }
+        
             $(document).ready(function() {
                 refreshData();
             });
-            
+
             function refreshData() {
                 var url = 'suite_view'; 
                 $('#refreshWrapper').load(url + ' #refreshableData', function(){
@@ -24,6 +38,7 @@
                     console.log("refresh")
                     
                     // Toggleable
+                    // TODO: how to ensure the values that are hidden stay hidden after an inner refresh? maybe cookies
                     $('.toggle').each(function(){
                         var clicked_item_id = $(this).attr('id');
                         $(this).click(function(){
@@ -34,11 +49,9 @@
                             else
                                 $(this).addClass("rotated") 
                             
-                            // TODO: there's a bug, only direct parent clicks will
-                            // hide children, has to work for all ancestors, maybe use regex??  
                             if (clicked_item_id != "") {
                                 console.log("item clicked: " + clicked_item_id)
-                                $('.' + clicked_item_id).toggle(250);
+                                $(':regex(class, ' + clicked_item_id + ')').toggle(250);
                             }
                         });
                     });
