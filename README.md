@@ -18,7 +18,7 @@ Follow the [documentation](https://cylc.github.io/cylc/documentation.html#create
 
 Run the workspace in Cloud9 once the suite is already up and running. View the html file `suite_view.html` to ensure it's behaving as expected. 
 
-![Sample Suite View]()
+![Sample Suite View](https://raw.githubusercontent.com/NancyGomez/WebBasedCylc/c9stuff/Screenshots/nrlsample_suiteview.png)
 
 
 ## Prerequisites

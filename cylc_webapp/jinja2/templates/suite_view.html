@@ -30,7 +30,7 @@
             $(document).ready(function() {
                 refreshData();
             });
-
+            
             function refreshData() {
                 var url = 'suite_view'; 
                 $('#refreshWrapper').load(url + ' #refreshableData', function(){
@@ -63,8 +63,16 @@
     
     <!--Content-->
     <body>
+        
+        {% if data is not defined %}
+            {% set no_data = True %}
+            {% set suite_name = "No Suite" %}
+        {% else %}
+            {% set suite_name = suite %}
+        {% endif %}
+        
         <div class="center">
-            <h1 class="display-4">{{suite}}</h1>    
+            <h1 class="display-4">{{suite_name}}</h1>    
                 
             <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
                 <a class="navbar-brand" href="#">Suite View</a>
@@ -106,53 +114,58 @@
     		    {% endif %}
             {%- endmacro %}
     
-        
-            <div id="refreshWrapper">
-                <div id = "refreshableData">
-                    <table id="JobDisplay" class="table table-striped">
-                        <thead class="thead-dark">
-                            <th>task</th>
-                            <!--<th>label</th>-->
-                        	<th>state</th>
-                        	<th>host</th>
-                        	<th>latest message</th>
-                        	<th>job system</th>
-                        	<th>job ID</th>
-                        	<th>T-submit</th>
-                        	<th>T-start</th>
-                        	<th>T-finish</th>
-                        	<th>dT-mean</th>
-                    	</thead>
-                    	
-                        {% for item in data %}
-                    	<tr class="{{ item['parent_id'] }}">
-                    		<td>
-                    		    {% for i in range(item['indent']) %}    
-                    		        &emsp;&emsp;
-                    		    {% endfor %}
-                    		    
-                    		    {% if item["is_group"]%}
-                    		       <img src="{{ static('Pictures/down_arrow.png') }}" id="{{ item['own_id'] }}" class="toggle" height="20" width="20"></img>
-                    		    {% endif %}
-                    		    
-                    		    {{ displayStateColor(item["state"]) }}
-                                {{ item["name"] }}
-                    		</td>
-                    		<!--<td>{{ item["label"] }}</td>-->
-                    		<td>{{ item["state"] }}</td>
-                    		<td>{{ item["host"] }}</td>
-                    		<td>{{ item["latest_message"] }}</td>
-                    		<td>{{ item["batch_sys_name"] }}</td>
-                    		<td>{{ item["submit_method_id"] }}</td>
-                    		<td>{{ item["submitted_time_string"] }}</td>
-                    		<td>{{ item["started_time_string"] }}</td>
-                    		<td>{{ item["finished_time_string"] }}</td>
-                    		<td>{{ item["mean_elapsed_time"] }}</td>
-                    	</tr>
-                        {% endfor %}
-                    </table>
-                </div> <!--refreshableData-->
-            </div> <!--refreshWrapper-->    
+            
+            {% if no_data %}
+                <span> No Active Suite Running to View! </span>
+            {% else %}
+            
+                <div id="refreshWrapper">
+                    <div id = "refreshableData">
+                        <table id="JobDisplay" class="table table-striped">
+                            <thead class="thead-dark">
+                                <th>task</th>
+                                <!--<th>label</th>-->
+                            	<th>state</th>
+                            	<th>host</th>
+                            	<th>latest message</th>
+                            	<th>job system</th>
+                            	<th>job ID</th>
+                            	<th>T-submit</th>
+                            	<th>T-start</th>
+                            	<th>T-finish</th>
+                            	<th>dT-mean</th>
+                        	</thead>
+                        	
+                            {% for item in data %}
+                        	<tr class="{{ item['parent_id'] }}">
+                        		<td>
+                        		    {% for i in range(item['indent']) %}    
+                        		        &emsp;&emsp;
+                        		    {% endfor %}
+                        		    
+                        		    {% if item["is_group"]%}
+                        		       <img src="{{ static('Pictures/down_arrow.png') }}" id="{{ item['own_id'] }}" class="toggle" height="20" width="20"></img>
+                        		    {% endif %}
+                        		    
+                        		    {{ displayStateColor(item["state"]) }}
+                                    {{ item["name"] }}
+                        		</td>
+                        		<!--<td>{{ item["label"] }}</td>-->
+                        		<td>{{ item["state"] }}</td>
+                        		<td>{{ item["host"] }}</td>
+                        		<td>{{ item["latest_message"] }}</td>
+                        		<td>{{ item["batch_sys_name"] }}</td>
+                        		<td>{{ item["submit_method_id"] }}</td>
+                        		<td>{{ item["submitted_time_string"] }}</td>
+                        		<td>{{ item["started_time_string"] }}</td>
+                        		<td>{{ item["finished_time_string"] }}</td>
+                        		<td>{{ item["mean_elapsed_time"] }}</td>
+                        	</tr>
+                            {% endfor %}
+                        </table>
+                    </div> <!--refreshableData-->
+                </div> <!--refreshWrapper-->    
+                {% endif %}
         </div> <!--center-->
     </body>
 </html>

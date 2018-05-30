@@ -26,9 +26,8 @@ def suite_view(request):
     dataset = []
     dataOrder = ["name", "label", "latest_message","host","batch_sys_name","submit_method_id","submitted_time_string","started_time_string","finished_time_string","mean_elapsed_time"]
     if(data == None):
-        d = Job()
-        for i in range(10):
-            dataset.append(d.as_dict())
+        template = loader.get_template('suite_view.html')
+        return HttpResponse(template.render(request) )
     else:
         for job in data:
             job = job.as_dict()

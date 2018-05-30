@@ -32,6 +32,7 @@ class Job:
         
         # Information used for front end purposes
         self.is_group = False
+        self.is_hidden = False
         self.indent = 0
         self.parent_id = ""
         self.own_id = ""
